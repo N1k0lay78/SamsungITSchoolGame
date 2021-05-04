@@ -17,9 +17,10 @@ public class ArkadGame extends Game {
 
 	public void connectSocket() {
 		try {
-			socket = IO.socket("http://localhost:8080");
+			socket = IO.socket("http://localhost:8000");
 			socket.connect();
-		} catch (Exception e) {
- 		}
+		} catch(Exception e){
+			System.out.println(e);
+		}
 	}
 }
