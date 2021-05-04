@@ -10,7 +10,7 @@ public class ActorPinchos extends Actor {
 
     public ActorPinchos (TextureRegion pinchos) {
         this.pinchos=pinchos;
-        setSize(pinchos.getRegionWidth(), pinchos.getRegionHeight());
+        setSize(48, 48);
     }
 
     public void act (float delta){
@@ -19,6 +19,6 @@ public class ActorPinchos extends Actor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        batch.draw(pinchos, getX(), getY());
+        batch.draw(pinchos, getX(), getY(), 48, 48);
     }
 }
