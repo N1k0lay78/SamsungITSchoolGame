@@ -9,6 +9,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.arkadgame.game.obj.Person;
 
+import java.util.ArrayList;
+
 
 public class MainGameScreen extends BaseScreen {
     public MainGameScreen (ArkadGame game, ProcessInput process) {
@@ -18,24 +20,29 @@ public class MainGameScreen extends BaseScreen {
         texturaPinchos = new Texture("pinchos.png");
         regionPinchos = new TextureRegion(texturaPinchos, 0, 64, 128, 64);
     }
+
     private ProcessInput process;
     private Stage stage;
-    private ActorPinchos pinchos;
     private Person person;
     private Texture one_punch, texturaPinchos;
     private TextureRegion regionPinchos;
     private Integer speed = 2;
+    private ArrayList<ActorPinchos> pinchos = new ArrayList<>(1000);
 
     @Override
     public void show() {
         Gdx.input.setInputProcessor(process);
         stage = new Stage();
         person = new Person(one_punch);
-        pinchos = new ActorPinchos(regionPinchos);
+        for (int i = 0; i < 4; i++) {
+            ActorPinchos a = new ActorPinchos(regionPinchos);
+            a.setPosition(i * 200,100);
+            stage.addActor(a);
+            this.pinchos.add(a);
+        }
         stage.addActor(person);
-        stage.addActor(pinchos);
+        person.setPinchoss(this.pinchos);
         person.setPosition(20,100);
-        pinchos.setPosition(500,100);
     }
 
     @Override
@@ -48,21 +55,15 @@ public class MainGameScreen extends BaseScreen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0.4f, 0.5f, 0.8f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        person.gravity(Gdx.graphics.getDeltaTime());
         stage.act();
-        if (this.process.getShift()) {this.speed = 4;} else {this.speed = 2;}
-        if (this.process.getW()) {person.setY(person.getY() + speed);}
-        if (this.process.getS()) {person.setY(person.getY() - speed);}
-        if (this.process.getA()) {person.setX(person.getX() - speed);}
-        if (this.process.getD()) {person.setX(person.getX() + speed);}
-        comprobarColisiones();
+        if (this.process.getShift()) {this.speed = 260;} else {this.speed = 140;}
+        float local_speed = this.speed * Gdx.graphics.getDeltaTime();
+        if (this.process.getW()) {person.jump(Gdx.graphics.getDeltaTime());}
+        // if (this.process.getS()) {person.move_down(local_speed);}
+        if (this.process.getA()) {person.move_left(local_speed);}
+        if (this.process.getD()) {person.move_right(local_speed);}
         stage.draw();
-    }
-
-    private void comprobarColisiones(){
-        if (person.isAlive()&&person.getX()+person.getWidth()>pinchos.getX()){
-            System.out.println("Colision");
-            person.setAlive(false);
-        }
     }
 
     @Override
