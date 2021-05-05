@@ -26,24 +26,22 @@ public class Person extends Actor {
     private float jumpingAnim = 0f;
     private float jumpSpeed = 0f;
     private float gravitySpeed = 0f;
+    private float xSpeed = 0f;
+    private float ySpeed = 0f;
     private boolean isLeft = false;
     private boolean alive;
     private boolean back = false;
-    private boolean collision = false;
     private boolean onStairs = false;
     private boolean readyToJump = true;
 
     public void gravity(float time) {
-        if (!this.collision) {
-            gravitySpeed += time * time * gravity / 2;
+        if (!this.checkCollisions()) {
+            this.ySpeed -= time * time * gravity / 2;
         } else {
             gravitySpeed = 0f;
-            this.jumpSpeed = 0f;
-            this.collision = false;
-            this.readyToJump = true;
+            this.ySpeed = 0f;
         }
-        this.move_up(this.jumpSpeed);
-        this.move_down(this.gravitySpeed);
+        this.move_up(this.ySpeed);
     }
 
     public boolean getReadyToJump() {return readyToJump;}
@@ -85,11 +83,11 @@ public class Person extends Actor {
     }
 
     public void updateTextureJump(float time) {
-            resetAnim(0, 0);
-            standingAnim = 1f;
-            personRegion = new TextureRegion(personTexture, 16, 144, 16, 24);
-            if (isLeft) {personRegion.flip(true, false);}
-            setSize(48, 72);
+        resetAnim(0, 0);
+        standingAnim = 1f;
+        personRegion = new TextureRegion(personTexture, 16, 144, 16, 24);
+        if (isLeft) {personRegion.flip(true, false);}
+        setSize(48, 72);
     }
 
     public void updateTextureStanding(float time) {
@@ -120,31 +118,31 @@ public class Person extends Actor {
     public void move_left(float speed) {
         isLeft = true;
         this.setX(this.getX() - speed);
-        this.checkCollisions();
+        if (this.checkCollisions()) {this.setX(this.getX() + speed);}
     }
 
     public void move_right(float speed) {
         isLeft = false;
         this.setX(this.getX() + speed);
-        this.checkCollisions();
+        if (this.checkCollisions()) {this.setX(this.getX() - speed);}
     }
 
     public void move_up(float speed) {
         this.setY(this.getY() + speed);
-        this.checkCollisions();
+        if (this.checkCollisions()) {this.setY(this.getY() - speed); this.ySpeed = 0f;}
     }
 
     public void jump(float time) {
-        readyToJump = false;
-        jumpSpeed = jumpForce * time;
+        if (this.readyToJump) {this.ySpeed = jumpForce * time;}
+        this.readyToJump = false;
     }
 
     public void move_down(float speed) {
         this.setY(this.getY() - speed);
-        this.checkCollisions();
+        if (this.checkCollisions()) {this.setY(this.getY() + speed); this.ySpeed = 0f;}
     }
 
-    private void checkCollisions(){
+    private boolean checkCollisions(){
         for (Actor pinchos: this.pinchoss) {
             boolean x_col = false, y_col = false;
             if ((this.getX()+this.getWidth()>pinchos.getX()||this.getX()>pinchos.getX())&&
@@ -156,11 +154,10 @@ public class Person extends Actor {
                 y_col = true;
             }
             if (x_col == true&&y_col==true) {
-                this.collision = true;
-                if (pinchos.getY()+pinchos.getHeight()-this.getY()<this.getHeight()+this.getY()-pinchos.getY()) {
-                    this.move_up(pinchos.getY() + pinchos.getHeight() - this.getY());
-                } else {this.move_down(this.getHeight() + this.getY() - pinchos.getY());}
+                if ((this.getX()+this.getWidth()-6>pinchos.getX()||this.getX()+6>pinchos.getX())&&
+                        (pinchos.getX()+pinchos.getWidth()>this.getWidth()+this.getX()-6||pinchos.getX()+pinchos.getWidth()>this.getX()+6)) {this.readyToJump = true;}
+                return true;
             }
-        }
+        } return false;
     }
 }
