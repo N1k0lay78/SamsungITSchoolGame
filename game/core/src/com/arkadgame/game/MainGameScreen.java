@@ -2,6 +2,7 @@ package com.arkadgame.game;
 
 import com.arkadgame.game.obj.Acid;
 import com.arkadgame.game.obj.ActorPinchos;
+import com.arkadgame.game.obj.Barrel;
 import com.arkadgame.game.obj.CustomActor;
 import com.arkadgame.game.obj.Stairs;
 import com.badlogic.gdx.Gdx;
@@ -48,8 +49,18 @@ public class MainGameScreen extends BaseScreen {
         this.create_stairs_on(384, 48, 2);
         person = new Person(personTexture);
         stage.addActor(person);
+        pinchos.add(person);
+        this.create_barrel(400, 300);
         person.setPinchoss(this.pinchos);
         person.setPosition(20,400);
+    }
+
+    private void create_barrel(int x, int y) {
+        Barrel bar = new Barrel(texturaPinchos);
+        bar.setPosition(x, y);
+        bar.setPinchoss(this.pinchos);
+        stage.addActor(bar);
+        this.pinchos.add(bar);
     }
 
     private void create_platform_on(int x, int y, int l) {

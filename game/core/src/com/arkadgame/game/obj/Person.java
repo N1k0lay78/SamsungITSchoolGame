@@ -183,7 +183,7 @@ public class Person extends CustomActor {
                     (pinchos.getY()+pinchos.getHeight()>this.getHeight()+this.getY()||pinchos.getY()+pinchos.getHeight()>this.getY())) {
                 y_col = true;
             }
-            if (x_col&&y_col) {
+            if (x_col&&y_col&&!pinchos.getType().equalsIgnoreCase("Person")) {
                 if (pinchos.getType().equalsIgnoreCase("Stairs")) {
                     if (pinchos.getY()<this.getY() + 32) {
                         //System.out.println(moveDown + " " + ySpeed + " " + onStair);
