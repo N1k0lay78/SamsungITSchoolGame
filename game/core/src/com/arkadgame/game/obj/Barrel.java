@@ -35,7 +35,6 @@ public class Barrel extends CustomActor {
         if (!this.checkCollisions()) {
             this.ySpeed -= time * time * gravity / 2;
         } else {
-            System.out.println(ySpeed);
             this.ySpeed = 0f;
         }
         this.move_up(this.ySpeed);
@@ -50,8 +49,7 @@ public class Barrel extends CustomActor {
 
     public void move_right(float speed) {
         this.setX(this.getX() + speed);
-        if (checkCollisions()) {
-            System.out.println();this.setX(this.getX() - speed);}}
+        if (checkCollisions()) {this.setX(this.getX() - speed);}}
 
     public String getType() {
         return "Barrel";
