@@ -2,6 +2,8 @@ package com.arkadgame.game;
 
 import com.arkadgame.game.obj.Acid;
 import com.arkadgame.game.obj.ActorPinchos;
+import com.arkadgame.game.obj.CustomActor;
+import com.arkadgame.game.obj.Stairs;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
@@ -23,44 +25,69 @@ public class MainGameScreen extends BaseScreen {
         regionPinchos1 = new TextureRegion(texturaPinchos, 0, 0, 16, 16);
         regionPinchos2 = new TextureRegion(texturaPinchos, 16, 0, 16, 16);
         regionPinchos3 = new TextureRegion(texturaPinchos, 32, 0, 16, 16);
+        regionStairs2 = new TextureRegion(texturaPinchos, 0, 16, 16, 16);
+        regionStairs1 = new TextureRegion(texturaPinchos, 16, 16, 16, 16);
     }
 
     private ProcessInput process;
     private Stage stage;
     private Person person;
     private Texture personTexture, texturaPinchos;
-    private TextureRegion regionPinchos1, regionPinchos2, regionPinchos3;
+    private TextureRegion regionPinchos1, regionPinchos2, regionPinchos3, regionStairs1, regionStairs2;
     private Integer speed = 2;
-    private ArrayList<Actor> pinchos = new ArrayList<>(1000);
+    private ArrayList<CustomActor> pinchos = new ArrayList<>(2000);
 
     @Override
     public void show() {
         Gdx.input.setInputProcessor(process);
         stage = new Stage();
+        this.create_acid_on(0, 0, 16);
+        this.create_platform_on(0, 96, 8);
+        this.create_platform_on(144, 240, 8);
+        this.create_stairs_on(192, 144, 3);
+        this.create_stairs_on(384, 48, 2);
         person = new Person(personTexture);
-        ActorPinchos a = new ActorPinchos(regionPinchos1);
-        a.setPosition(0,100);
-        stage.addActor(a);
-        this.pinchos.add(a);
-        for (int i = 1; i < 8; i++) {
-            a = new ActorPinchos(regionPinchos2);
-            a.setPosition(i * 48,100);
-            stage.addActor(a);
-            this.pinchos.add(a);
-        }
-        for (int i = 0; i < 16; i++) {
-            Acid b = new Acid(texturaPinchos);
-            b.setPosition(i * 48,0);
-            stage.addActor(b);
-            this.pinchos.add(b);
-        }
-        a = new ActorPinchos(regionPinchos3);
-        a.setPosition(384,100);
-        stage.addActor(a);
-        this.pinchos.add(a);
         stage.addActor(person);
         person.setPinchoss(this.pinchos);
         person.setPosition(20,400);
+    }
+
+    private void create_platform_on(int x, int y, int l) {
+        ActorPinchos a = new ActorPinchos(regionPinchos1);
+        a.setPosition(x,y);
+        stage.addActor(a);
+        this.pinchos.add(a);
+        for (int i = 1; i < l - 1; i++) {
+            a = new ActorPinchos(regionPinchos2);
+            a.setPosition(x + i * 48,y);
+            stage.addActor(a);
+            this.pinchos.add(a);
+        }
+        a = new ActorPinchos(regionPinchos3);
+        a.setPosition(x + 48 * (l - 1), y);
+        stage.addActor(a);
+        this.pinchos.add(a);
+    }
+
+    private void create_acid_on(int x, int y, int l) {
+        for (int i = 0; i < l; i++) {
+            Acid b = new Acid(texturaPinchos);
+            b.setPosition(x + i * 48,y);
+            stage.addActor(b);
+            this.pinchos.add(b);
+        }
+    }
+
+    private void create_stairs_on(int x, int y, int l) {
+        Stairs c = new Stairs(regionStairs1);
+        c.setPosition(x, y);
+        stage.addActor(c);
+        for (int i = 1; i < l; i++) {
+            c = new Stairs(regionStairs2);
+            c.setPosition(x, y + i * 48);
+            stage.addActor(c);
+            this.pinchos.add(c);
+        }
     }
 
     @Override
@@ -73,19 +100,22 @@ public class MainGameScreen extends BaseScreen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0.4f, 0.5f, 0.8f, 1f);
         float time = Gdx.graphics.getDeltaTime();
+        float m_s = 0f;
         boolean move = false, l = false, r = false;
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         person.gravity(time);
         stage.act();
         if (this.process.getShift()) {this.speed = 260;} else {this.speed = 140;}
         float local_speed = this.speed * time;
-        if (this.process.getW()||this.process.getSpace()) {person.jump(time);}
-        // if (this.process.getS()) {person.move_down(local_speed);}
+        if (this.process.getW()||this.process.getSpace()) {m_s = local_speed; if (!person.getOnStairs()) {person.jump(time);} else {person.move_up(local_speed);}}
+        if ((this.process.getS()||this.process.getCtrl())&&person.getOnStairs()) {person.move_down(local_speed);}
+        if (this.process.getS()||this.process.getCtrl()) {m_s = -local_speed; person.setMoveDown(true);} else {person.setMoveDown(false);}
         if (this.process.getA()) {person.move_left(local_speed); move = true; l = true;}
         if (this.process.getD()) {person.move_right(local_speed); move = true; r = true;}
-        if (move&&person.getReadyToJump()&&((l&&!r)||(!l&&r))) {person.updateTextureRun(local_speed);} else if (!person.getReadyToJump()){
+        if (person.getOnStairs()) {person.updateTextureClimbing(m_s);} else {
+        if (move&&person.getReadyToJump()&&(!l||!r)) {person.updateTextureRun(local_speed);} else if (!person.getReadyToJump()){
             person.updateTextureJump(time);
-        } else{person.updateTextureStanding(time);}
+        } else{person.updateTextureStanding(time); }}
         stage.draw();
     }
 

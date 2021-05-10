@@ -13,6 +13,7 @@ public class ProcessInput extends InputAdapter {
     private boolean D;
     private boolean Space;
     private boolean Shift;
+    private boolean Ctrl;
 
     @Override
     public boolean keyDown(int button) {
@@ -22,6 +23,7 @@ public class ProcessInput extends InputAdapter {
         if (button == Input.Keys.D) {D = true;}
         if (button == Input.Keys.SPACE) {Space = true;}
         if (button == Input.Keys.SHIFT_LEFT) {Shift = true;}
+        if (button == Input.Keys.CONTROL_LEFT) {Ctrl = true;}
         return true;
     }
 
@@ -33,6 +35,7 @@ public class ProcessInput extends InputAdapter {
         if (button == Input.Keys.D) {D = false;}
         if (button == Input.Keys.SPACE) {Space = false;}
         if (button == Input.Keys.SHIFT_LEFT) {Shift = false;}
+        if (button == Input.Keys.CONTROL_LEFT) {Ctrl = false;}
         return false;
     }
 
@@ -51,5 +54,8 @@ public class ProcessInput extends InputAdapter {
     public boolean getSpace() {return Space;}
     public boolean getShift() {
         return Shift;
+    }
+    public boolean getCtrl() {
+        return Ctrl;
     }
 }

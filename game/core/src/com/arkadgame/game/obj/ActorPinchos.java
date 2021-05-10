@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 
-public class ActorPinchos extends Actor {
+public class ActorPinchos extends CustomActor {
     private TextureRegion pinchos;
 
     public ActorPinchos (TextureRegion pinchos) {
@@ -15,6 +15,10 @@ public class ActorPinchos extends Actor {
 
     public void act (float delta){
 
+    }
+
+    public String getType() {
+        return "Pinchos";
     }
 
     @Override

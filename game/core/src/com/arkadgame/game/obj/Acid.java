@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 
-public class Acid extends Actor {
+public class Acid extends CustomActor {
     private TextureRegion acidRegion;
     private Texture acidTexture;
     private int frame = 1;
@@ -30,6 +30,10 @@ public class Acid extends Actor {
             acidRegion = new TextureRegion(acidTexture, 16 * frame, 32, 16, 16);
             setSize(48, 48);
         }
+    }
+
+    public String getType() {
+        return "Acid";
     }
 
     @Override
