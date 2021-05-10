@@ -24,6 +24,6 @@ public class Background extends CustomActor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        batch.draw(backgroundRegion, 0, -60, 1280, 720);
+        batch.draw(backgroundRegion, 0, -80, 1280, 720);
     }
 }
