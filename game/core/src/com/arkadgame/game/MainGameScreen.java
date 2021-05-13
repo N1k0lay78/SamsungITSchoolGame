@@ -2,6 +2,7 @@ package com.arkadgame.game;
 
 import com.arkadgame.game.obj.Acid;
 import com.arkadgame.game.obj.ActorPinchos;
+import com.arkadgame.game.obj.Background;
 import com.arkadgame.game.obj.Barrel;
 import com.arkadgame.game.obj.CustomActor;
 import com.arkadgame.game.obj.Stairs;
@@ -16,11 +17,16 @@ import com.arkadgame.game.obj.Person;
 
 import java.util.ArrayList;
 
+import io.socket.client.IO;
+import io.socket.client.Socket;
+
 
 public class MainGameScreen extends BaseScreen {
-    public MainGameScreen (ArkadGame game, ProcessInput process) {
+    public MainGameScreen (ArkadGame game, ProcessInput process, Socket socket) {
+
         super(game, process);
         this.process = process;
+        menuTexture = new Texture("menu.png");
         personTexture = new Texture("player_anim.png");
         texturaPinchos = new Texture("tileset_16.png");
         regionPinchos1 = new TextureRegion(texturaPinchos, 0, 0, 16, 16);
@@ -33,7 +39,7 @@ public class MainGameScreen extends BaseScreen {
     private ProcessInput process;
     private Stage stage;
     private Person person;
-    private Texture personTexture, texturaPinchos;
+    private Texture personTexture, texturaPinchos, menuTexture;
     private TextureRegion regionPinchos1, regionPinchos2, regionPinchos3, regionStairs1, regionStairs2;
     private Integer speed = 2;
     private ArrayList<CustomActor> pinchos = new ArrayList<>(2000);
@@ -42,11 +48,12 @@ public class MainGameScreen extends BaseScreen {
     public void show() {
         Gdx.input.setInputProcessor(process);
         stage = new Stage();
+        Background background = new Background(menuTexture);
+        stage.addActor(background);
         this.create_acid_on(0, 0, 16);
         this.create_platform_on(0, 96, 8);
         this.create_platform_on(144, 240, 8);
         this.create_stairs_on(192, 144, 3);
-        this.create_stairs_on(384, 48, 2);
         person = new Person(personTexture);
         stage.addActor(person);
         pinchos.add(person);
