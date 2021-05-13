@@ -12,13 +12,16 @@ public class ArkadGame extends Game {
 	public void create () {
 		connectSocket();
 		ProcessInput process = new ProcessInput();
-		setScreen(new MainGameScreen(this, process));
+		setScreen(new MainGameScreen(this, process, socket));
 	}
 
 	public void connectSocket() {
+		System.out.println("RRRRRR");
+
 		try {
 			socket = IO.socket("http://localhost:8000");
 			socket.connect();
+			System.out.println("222222");
 		} catch(Exception e){
 			System.out.println(e);
 		}
