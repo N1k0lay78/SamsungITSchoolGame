@@ -17,7 +17,10 @@ public class ProcessInput extends InputAdapter {
 
     @Override
     public boolean keyDown(int button) {
-        if (button == Input.Keys.W) {W = true;}
+        if (button == Input.Keys.W) {
+            W = true;
+
+        }
         if (button == Input.Keys.S) {S = true;}
         if (button == Input.Keys.A) {A = true;}
         if (button == Input.Keys.D) {D = true;}

@@ -17,9 +17,13 @@ import com.arkadgame.game.obj.Person;
 
 import java.util.ArrayList;
 
+import io.socket.client.IO;
+import io.socket.client.Socket;
+
 
 public class MainGameScreen extends BaseScreen {
-    public MainGameScreen (ArkadGame game, ProcessInput process) {
+    public MainGameScreen (ArkadGame game, ProcessInput process, Socket socket) {
+
         super(game, process);
         this.process = process;
         menuTexture = new Texture("menu.png");
