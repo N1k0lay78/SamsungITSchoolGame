@@ -7,10 +7,12 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class ActorPinchos extends CustomActor {
     private TextureRegion pinchos;
+    private int sizeX = 48;
+    private int sizeY = 48;
 
     public ActorPinchos (TextureRegion pinchos) {
         this.pinchos=pinchos;
-        setSize(48, 48);
+        setSize(sizeX, sizeY);
     }
 
     public void act (float delta){
@@ -23,6 +25,6 @@ public class ActorPinchos extends CustomActor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        batch.draw(pinchos, getX(), getY(), 48, 48);
+        batch.draw(pinchos, getX(), getY(), sizeX, sizeY);
     }
 }

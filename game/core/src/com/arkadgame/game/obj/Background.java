@@ -10,12 +10,14 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 public class Background extends CustomActor {
     private TextureRegion backgroundRegion;
     private Texture backgroundTexture;
+    private int sizeX = 1280;
+    private int sizeY = 720;
 
 
     public Background(Texture backgroundTexture) {
         this.backgroundTexture = backgroundTexture;
         backgroundRegion = new TextureRegion(backgroundTexture, 0, 0, 256, 144);
-        setSize(720, 405);
+        setSize(sizeX, sizeY);
     }
 
     public String getType() {
@@ -24,6 +26,6 @@ public class Background extends CustomActor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        batch.draw(backgroundRegion, 0, -80, 1280, 720);
+        batch.draw(backgroundRegion, 0, -80, sizeX, sizeY);
     }
 }

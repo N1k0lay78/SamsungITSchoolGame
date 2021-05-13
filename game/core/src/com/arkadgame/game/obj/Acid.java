@@ -11,12 +11,14 @@ public class Acid extends CustomActor {
     private TextureRegion acidRegion;
     private Texture acidTexture;
     private int frame = 1;
+    private int sizeX = 48;
+    private int sizeY = 48;
     private float time = 0f;
 
     public Acid (Texture acidTexture) {
         this.acidTexture=acidTexture;
         acidRegion = new TextureRegion(acidTexture, 16 * frame, 32, 16, 16);
-        setSize(48, 10);
+        setSize(sizeX, 1);
     }
 
     public void anim (){
@@ -28,7 +30,7 @@ public class Acid extends CustomActor {
                 frame = 0;
             }
             acidRegion = new TextureRegion(acidTexture, 16 * frame, 32, 16, 16);
-            setSize(48, 48);
+            setSize(sizeX, sizeY);
         }
     }
 
@@ -39,6 +41,6 @@ public class Acid extends CustomActor {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         anim();
-        batch.draw(acidRegion, getX(), getY(), 48, 48);
+        batch.draw(acidRegion, getX(), getY(), sizeX, sizeY);
     }
 }
