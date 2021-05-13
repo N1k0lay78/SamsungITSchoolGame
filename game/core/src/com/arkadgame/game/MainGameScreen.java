@@ -61,7 +61,7 @@ public class MainGameScreen extends BaseScreen {
         this.create_stairs_on(240, 292, 3);
         stage.addActor(person);
         pinchos.add(person);
-        this.create_barrel(400, 400);
+        this.create_barrel(400, 600);
         person.setPinchoss(this.pinchos);
         camera.setObjects(this.pinchos);
         person.setPosition(20, 500);
