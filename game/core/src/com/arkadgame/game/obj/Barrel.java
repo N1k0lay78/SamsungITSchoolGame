@@ -1,6 +1,5 @@
 package com.arkadgame.game.obj;
 
-import com.arkadgame.game.Camera;
 import com.badlogic.gdx.Gdx;;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -24,13 +23,11 @@ public class Barrel extends CustomActor {
     private float ySpeed = 0f;
     private float sx = 0f;
     private float sy = 0f;
-    private Camera camera;
 
-    public Barrel(Texture barrelTexture, Camera camera, float sx, float sy) {
+    public Barrel(Texture barrelTexture, float sx, float sy) {
         this.barrelTexture=barrelTexture;
         this.sx = sx;
         this.sy = sy;
-        this.camera = camera;
         barrelRegion = new TextureRegion(barrelTexture, 32, 16, 16, 16);
         setSize(40, 40);
     }
@@ -46,7 +43,7 @@ public class Barrel extends CustomActor {
         }
         this.move_up(this.ySpeed);
         this.move_right(xSpeed * time);
-        if (this.getY() < -5f) {this.setPosition(sx - camera.getCoordX(), sy - camera.getCoordY());}
+        if (this.getY() < -5f) {this.setPosition(sx, sy);}
     }
 
     public void move_up(float speed) {

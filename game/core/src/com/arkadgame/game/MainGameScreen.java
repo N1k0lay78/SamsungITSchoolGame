@@ -7,13 +7,16 @@ import com.arkadgame.game.obj.Barrel;
 import com.arkadgame.game.obj.CustomActor;
 import com.arkadgame.game.obj.Stairs;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.arkadgame.game.obj.Person;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.ArrayList;
 
@@ -42,33 +45,38 @@ public class MainGameScreen extends BaseScreen {
     private Texture personTexture, texturaPinchos, menuTexture;
     private TextureRegion regionPinchos1, regionPinchos2, regionPinchos3, regionStairs1, regionStairs2;
     private Integer speed = 2;
+    private float minY = 284f;
     private ArrayList<CustomActor> pinchos = new ArrayList<>(2000);
-    private Camera camera;
+    private Viewport viewport;
+    private OrthographicCamera camera;
 
     @Override
     public void show() {
         Gdx.input.setInputProcessor(process);
         stage = new Stage();
         person = new Person(personTexture);
-        camera = new Camera(person);
         Background background = new Background(menuTexture);
         stage.addActor(background);
         this.create_acid_on(0, 0, 16);
         this.create_platform_on(0, 96, 8);
         this.create_platform_on(144, 240, 8);
         this.create_stairs_on(192, 144, 3);
-        this.create_platform_on(24, 388, 11);
-        this.create_stairs_on(240, 292, 3);
+        this.create_platform_on(24, 384, 11);
+        this.create_stairs_on(240, 288, 3);
+        this.create_platform_on(24, 530, 13);
+        this.create_stairs_on(196, 432, 3);
         stage.addActor(person);
         pinchos.add(person);
-        this.create_barrel(400, 600);
+        this.create_barrel(400, 450);
         person.setPinchoss(this.pinchos);
-        camera.setObjects(this.pinchos);
-        person.setPosition(20, 500);
+        person.setPosition(20, 300);
+        camera = new OrthographicCamera(750, 565);
+        camera.position.set(375f, person.getY(), 0f);
+        camera.update();
     }
 
     private void create_barrel(int x, int y) {
-        Barrel bar = new Barrel(texturaPinchos, this.camera, x + this.camera.getCoordX(), y + this.camera.getCoordY());
+        Barrel bar = new Barrel(texturaPinchos, x, y);
         bar.setPosition(x, -1000);
         bar.setPinchoss(this.pinchos);
         stage.addActor(bar);
@@ -125,11 +133,22 @@ public class MainGameScreen extends BaseScreen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0.4f, 0.5f, 0.8f, 1f);
         stage.act();
-        float time = Gdx.graphics.getDeltaTime();
+        float newY = person.getY();
+        if (newY < minY) {newY = minY;}
+        camera.position.lerp(new Vector3(375f, newY, 0f), 0.1f);
         camera.update();
-        camera.setCoord(camera.getCoordX(), person.getY());
+        stage.getBatch().setProjectionMatrix(camera.combined);
+        float time = Gdx.graphics.getDeltaTime();
         person.update(this.process, time);
-        stage.draw();
+        stage.getBatch().begin();
+        for (Actor i: stage.getActors()) {
+            i.draw(stage.getBatch(), 0);
+        }
+        stage.getBatch().end();
+    }
+
+    public void resize(int width, int height) {
+        // viewport.update(width, height);
     }
 
     @Override

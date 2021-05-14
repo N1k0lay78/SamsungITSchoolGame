@@ -25,8 +25,8 @@ public class Person extends CustomActor {
     private int sizeX = 48;
     private int sizeY = 72;
     private int speed = 140;
-    private float gravity = 700f;
-    private float jumpForce = 175f;
+    private float gravity = 1000f;
+    private float jumpForce = 250f;
     private float runAnim = 0f;
     private float climbingAnim = 0f;
     private float standingAnim = 0f;
@@ -60,11 +60,11 @@ public class Person extends CustomActor {
                 if (!this.getOnStairs()) {
                     this.jump(time);
                 } else {
-                    this.move_up(local_speed / 2);
+                    this.move_up(local_speed);
                 }
             }
             if ((process.getS() || process.getCtrl()) && this.getOnStairs()) {
-                this.move_down(local_speed / 2);
+                this.move_down(local_speed);
             }
             if (process.getS() || process.getCtrl()) {
                 m_s = -local_speed;
