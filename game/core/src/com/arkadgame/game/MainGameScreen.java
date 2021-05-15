@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.arkadgame.game.obj.Person;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.ArrayList;
@@ -41,38 +42,54 @@ public class MainGameScreen extends BaseScreen {
 
     private ProcessInput process;
     private Stage stage;
+    private Viewport viewport;
     private Person person;
     private Texture personTexture, texturaPinchos, menuTexture;
     private TextureRegion regionPinchos1, regionPinchos2, regionPinchos3, regionStairs1, regionStairs2;
     private Integer speed = 2;
-    private float minY = 284f;
+    private float minX = 320;
+    private float maxX = 544;
+    private int width = 720;
+    private int height = 1280;
+    private float minY = 240f;
     private ArrayList<CustomActor> pinchos = new ArrayList<>(2000);
-    private Viewport viewport;
     private OrthographicCamera camera;
 
     @Override
     public void show() {
         Gdx.input.setInputProcessor(process);
-        stage = new Stage();
         person = new Person(personTexture);
+        camera = new OrthographicCamera(width, height);
+        camera.position.set(100, person.getY(), 0f);
+        camera.update();
+        /*viewport = new FitViewport(width, height, camera);
+        stage = new Stage(viewport);
+        stage.getViewport().apply();*/
+        System.out.println(camera.viewportHeight + " " + camera.viewportWidth);
+        stage = new Stage();
+        stage.getViewport().setCamera(camera);
+        // stage.getViewport().setScreenSize(width, height);
         Background background = new Background(menuTexture);
         stage.addActor(background);
         this.create_acid_on(0, 0, 16);
-        this.create_platform_on(0, 96, 8);
-        this.create_platform_on(144, 240, 8);
-        this.create_stairs_on(192, 144, 3);
-        this.create_platform_on(24, 384, 11);
+        this.create_platform_on(240, 96, 13);
+        this.create_platform_on(48, 240, 14);
+        this.create_stairs_on(576, 144, 3);
+        this.create_platform_on(192, 384, 14);
         this.create_stairs_on(240, 288, 3);
-        this.create_platform_on(24, 530, 13);
-        this.create_stairs_on(196, 432, 3);
+        this.create_platform_on(0, 530, 15);
+        this.create_stairs_on(588, 432, 3);
         stage.addActor(person);
         pinchos.add(person);
-        this.create_barrel(400, 450);
+        this.create_barrel(400, 620);
+        this.create_barrel(400, 820);
+        this.create_barrel(400, 950);
+        this.create_barrel(400, 1050);
+        this.create_barrel(400, 1200);
+        this.create_barrel(400, 1350);
+        this.create_barrel(400, 1500);
         person.setPinchoss(this.pinchos);
-        person.setPosition(20, 300);
-        camera = new OrthographicCamera(750, 565);
-        camera.position.set(375f, person.getY(), 0f);
-        camera.update();
+        person.setPosition(260, 160);
     }
 
     private void create_barrel(int x, int y) {
@@ -134,8 +151,11 @@ public class MainGameScreen extends BaseScreen {
         Gdx.gl.glClearColor(0.4f, 0.5f, 0.8f, 1f);
         stage.act();
         float newY = person.getY();
+        float newX = person.getX();
+        if (newX < minX) {newX = minX;}
+        else if (newX > maxX) {newX = maxX;}
         if (newY < minY) {newY = minY;}
-        camera.position.lerp(new Vector3(375f, newY, 0f), 0.1f);
+        camera.position.lerp(new Vector3(newX, newY, 0f), 0.1f);
         camera.update();
         stage.getBatch().setProjectionMatrix(camera.combined);
         float time = Gdx.graphics.getDeltaTime();
@@ -148,7 +168,7 @@ public class MainGameScreen extends BaseScreen {
     }
 
     public void resize(int width, int height) {
-        // viewport.update(width, height);
+        stage.getViewport().update(width, height, false);
     }
 
     @Override
