@@ -14,7 +14,7 @@ public class Barrel extends CustomActor {
     private ArrayList<CustomActor> pinchoss;
     private TextureRegion barrelRegion;
     private Texture barrelTexture;
-    private float gravity = 1400;
+    private float gravity = 1500;
     private int frame = 1;
     private float angle = 1;
     private float speedRotation = 525f;
@@ -43,7 +43,7 @@ public class Barrel extends CustomActor {
         }
         this.move_up(this.ySpeed);
         this.move_right(xSpeed * time);
-        if (this.getY() < -5f) {this.setPosition(sx, sy); this.xSpeed = -225f; speedRotation = 525f;}
+        if (this.getY() < -5f) {this.setPosition(sx, sy); this.xSpeed = -225f; speedRotation = 525f; this.ySpeed = 0f;}
     }
 
     public void move_up(float speed) {

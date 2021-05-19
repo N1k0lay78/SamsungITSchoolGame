@@ -14,13 +14,16 @@ import jdk.nashorn.api.scripting.JSObject;
 
 public class ArkadGame extends Game {
 	private Socket socket;
+	private MainGameScreen mainGameScreen;
 
 	@Override
 	public void create () {
 		connectSocket();
 		configSocketEvents();
 		ProcessInput process = new ProcessInput();
-		setScreen(new MainGameScreen(this, process, socket));
+		mainGameScreen = new MainGameScreen(this, process, socket);
+		setScreen(mainGameScreen);
+
 	}
 
 	public void connectSocket() {
