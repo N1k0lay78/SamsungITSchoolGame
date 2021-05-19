@@ -2,6 +2,7 @@ package com.arkadgame.game;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,17 +16,21 @@ import jdk.nashorn.api.scripting.JSObject;
 public class ArkadGame extends Game {
 	private Socket socket;
 	private MainGameScreen mainGameScreen;
+	private MainMenu mainMenu;
 
 	@Override
 	public void create () {
 		connectSocket();
 		configSocketEvents();
+		this.resize(720, 1280);
 		ProcessInput process = new ProcessInput();
+		mainMenu = new MainMenu(this, process);
 		mainGameScreen = new MainGameScreen(this, process, socket);
-		setScreen(mainGameScreen);
+		setScreen(mainMenu);
 
 	}
 
+	public void recreateLevel() {this.mainGameScreen.recreate();}
 	public void connectSocket() {
 		try {
 			socket = IO.socket("http://localhost:8000");
@@ -41,6 +46,14 @@ public class ArkadGame extends Game {
 		} catch(Exception e) {
 			System.out.println(e);
 		}
+	}
+
+	public void setScreenMainMenu() {
+		setScreen(mainMenu);
+	}
+
+	public void setScreenMainGameScreen() {
+		setScreen(mainGameScreen);
 	}
 
 	public void configSocketEvents() {

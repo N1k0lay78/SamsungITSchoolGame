@@ -18,7 +18,7 @@ public class Acid extends CustomActor {
     public Acid (Texture acidTexture) {
         this.acidTexture=acidTexture;
         acidRegion = new TextureRegion(acidTexture, 16 * frame, 32, 16, 16);
-        setSize(sizeX, 1);
+        setSize(sizeX, sizeY);
     }
 
     public void anim (){

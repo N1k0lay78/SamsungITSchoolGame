@@ -6,6 +6,7 @@ import com.arkadgame.game.obj.Background;
 import com.arkadgame.game.obj.Barrel;
 import com.arkadgame.game.obj.CustomActor;
 import com.arkadgame.game.obj.Stairs;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -30,6 +31,7 @@ public class MainGameScreen extends BaseScreen {
 
         super(game, process);
         this.process = process;
+        this.game = game;
         menuTexture = new Texture("menu.png");
         personTexture = new Texture("player_anim.png");
         texturaPinchos = new Texture("tileset_16.png");
@@ -40,19 +42,19 @@ public class MainGameScreen extends BaseScreen {
         regionStairs1 = new TextureRegion(texturaPinchos, 16, 16, 16, 16);
     }
 
+    private ArkadGame game;
     private ProcessInput process;
     private Stage stage;
-    private Viewport viewport;
     private Person person;
     private Texture personTexture, texturaPinchos, menuTexture;
     private TextureRegion regionPinchos1, regionPinchos2, regionPinchos3, regionStairs1, regionStairs2;
-    private Integer speed = 2;
+    private int speed = 2;
     private float minX = 320;
     private float maxX = 544;
     private int width = 720;
     private int height = 1280;
     private float minY = 240f;
-    private ArrayList<CustomActor> pinchos = new ArrayList<>(2000);
+    private ArrayList<CustomActor> pinchos;
     private OrthographicCamera camera;
 
     @Override
@@ -60,12 +62,17 @@ public class MainGameScreen extends BaseScreen {
         Gdx.input.setInputProcessor(process);
         person = new Person(personTexture);
         camera = new OrthographicCamera(width, height);
-        camera.position.set(100, person.getY(), 0f);
+        camera.position.set(minX, minY, 0f);
         camera.update();
         /*viewport = new FitViewport(width, height, camera);
         stage = new Stage(viewport);
         stage.getViewport().apply();*/
         System.out.println(camera.viewportHeight + " " + camera.viewportWidth);
+        this.recreate();
+    }
+
+    public void recreate() {
+        this.pinchos = new ArrayList<>(2000);
         stage = new Stage();
         stage.getViewport().setCamera(camera);
         // stage.getViewport().setScreenSize(width, height);
@@ -161,6 +168,9 @@ public class MainGameScreen extends BaseScreen {
         float time = Gdx.graphics.getDeltaTime();
         person.update(this.process, time);
         stage.getBatch().begin();
+        if (this.process.getEsc()) {
+            this.game.setScreenMainMenu();
+        }
         for (Actor i: stage.getActors()) {
             i.draw(stage.getBatch(), 0);
         }
