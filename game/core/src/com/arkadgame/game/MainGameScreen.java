@@ -49,24 +49,28 @@ public class MainGameScreen extends BaseScreen {
     private Texture personTexture, texturaPinchos, menuTexture;
     private TextureRegion regionPinchos1, regionPinchos2, regionPinchos3, regionStairs1, regionStairs2;
     private int speed = 2;
-    private float minX = 320;
-    private float maxX = 544;
-    private int width = 720;
-    private int height = 1280;
+    private float minX = 224;
+    private float maxX = 640;
     private float minY = 240f;
+    private float maxY = 1800f;
+    private int width = 1280;
+    private int height = 720;
+    private int cPause = 0;
+    private boolean pause = false;
     private ArrayList<CustomActor> pinchos;
     private OrthographicCamera camera;
+    private float scale = 1;
 
     @Override
     public void show() {
         Gdx.input.setInputProcessor(process);
         person = new Person(personTexture);
         camera = new OrthographicCamera(width, height);
-        camera.position.set(minX, minY, 0f);
+        float c_x = person.getX(), c_y = person.getY();
+        if (c_x < minX) {c_x = minX;} else if (c_x > maxX) {c_x = maxX;}
+        if (c_y < minY) {c_y = minY;} else if (c_x > maxY) {c_y = maxY;}
+        camera.position.set(c_x, c_y, 0f);
         camera.update();
-        /*viewport = new FitViewport(width, height, camera);
-        stage = new Stage(viewport);
-        stage.getViewport().apply();*/
         System.out.println(camera.viewportHeight + " " + camera.viewportWidth);
         this.recreate();
     }
@@ -75,20 +79,27 @@ public class MainGameScreen extends BaseScreen {
         this.pinchos = new ArrayList<>(2000);
         stage = new Stage();
         stage.getViewport().setCamera(camera);
-        // stage.getViewport().setScreenSize(width, height);
+        this.scale = stage.getWidth() / height;
+        System.out.println(scale);
         Background background = new Background(menuTexture);
         stage.addActor(background);
-        this.create_acid_on(0, 0, 16);
-        this.create_platform_on(240, 96, 13);
-        this.create_platform_on(48, 240, 14);
-        this.create_stairs_on(576, 144, 3);
-        this.create_platform_on(192, 384, 14);
-        this.create_stairs_on(240, 288, 3);
-        this.create_platform_on(0, 530, 15);
-        this.create_stairs_on(588, 432, 3);
+        System.out.println(stage.getWidth() + " " + stage.getHeight());
+        this.minX = (stage.getWidth() / 2);
+        this.maxX = (1056 * scale - stage.getWidth() / 2);
+        this.minY = (stage.getHeight() / 2);
+        if (maxX < minX) {maxX *= 2;}
+        System.out.println(minX + " " + maxX + " " + minY + " " + scale);
+        this.create_acid_on(0, 0, 22);
+        this.create_platform_on(144, 96, 19);
+        this.create_platform_on(48, 288, 17);
+        this.create_stairs_on(672, 144, 4);
+        this.create_platform_on(240, 480, 17);
+        this.create_stairs_on(336, 336, 4);
+        this.create_platform_on(48, 674, 17);
+        this.create_stairs_on(684, 528, 4);
         stage.addActor(person);
         pinchos.add(person);
-        this.create_barrel(400, 620);
+        this.create_barrel(400, 1720);
         this.create_barrel(400, 820);
         this.create_barrel(400, 950);
         this.create_barrel(400, 1050);
@@ -150,20 +161,28 @@ public class MainGameScreen extends BaseScreen {
     @Override
     public void hide() {
         stage.dispose();
-
     }
 
     @Override
     public void render(float delta) {
+        /*if (this.process.getP()) {
+             if (cPause == 2) {cPause = 0; this.pause = false;} else {this.pause = true;}
+        } else {cPause++;}*/
         Gdx.gl.glClearColor(0.4f, 0.5f, 0.8f, 1f);
         stage.act();
-        float newY = person.getY();
-        float newX = person.getX();
-        if (newX < minX) {newX = minX;}
-        else if (newX > maxX) {newX = maxX;}
-        if (newY < minY) {newY = minY;}
+        float newY = person.getY() * scale;
+        float newX = person.getX() * scale;
+        if (newX < minX) {
+            newX = minX;
+        } else if (newX > maxX) {
+            newX = maxX;
+        }
+        if (newY < minY) {
+            newY = minY;
+        }
         camera.position.lerp(new Vector3(newX, newY, 0f), 0.1f);
         camera.update();
+        camera.combined.scl(scale);
         stage.getBatch().setProjectionMatrix(camera.combined);
         float time = Gdx.graphics.getDeltaTime();
         person.update(this.process, time);
@@ -171,7 +190,7 @@ public class MainGameScreen extends BaseScreen {
         if (this.process.getEsc()) {
             this.game.setScreenMainMenu();
         }
-        for (Actor i: stage.getActors()) {
+        for (Actor i : stage.getActors()) {
             i.draw(stage.getBatch(), 0);
         }
         stage.getBatch().end();
@@ -183,6 +202,6 @@ public class MainGameScreen extends BaseScreen {
 
     @Override
     public void dispose() {
-        // dispose something
+        stage.dispose();
     }
 }

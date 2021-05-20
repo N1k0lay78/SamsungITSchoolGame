@@ -22,15 +22,19 @@ public class ArkadGame extends Game {
 	public void create () {
 		connectSocket();
 		configSocketEvents();
-		this.resize(720, 1280);
 		ProcessInput process = new ProcessInput();
 		mainMenu = new MainMenu(this, process);
 		mainGameScreen = new MainGameScreen(this, process, socket);
 		setScreen(mainMenu);
+	}
 
+	public void render() {
+		System.out.println(12345);
+		super.render(); // ПЕРЕДЕЛАТЬ!!!!!!!!!!
 	}
 
 	public void recreateLevel() {this.mainGameScreen.recreate();}
+
 	public void connectSocket() {
 		try {
 			socket = IO.socket("http://localhost:8000");

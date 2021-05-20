@@ -11,6 +11,7 @@ public class ProcessInput extends InputAdapter {
     private boolean S;
     private boolean A;
     private boolean D;
+    private boolean P;
     private boolean Space;
     private boolean Shift;
     private boolean Ctrl;
@@ -22,6 +23,7 @@ public class ProcessInput extends InputAdapter {
         if (button == Input.Keys.S) {S = true;}
         if (button == Input.Keys.A) {A = true;}
         if (button == Input.Keys.D) {D = true;}
+        if (button == Input.Keys.P) {P = true;}
         if (button == Input.Keys.ESCAPE) {Esc = true;}
         if (button == Input.Keys.SPACE) {Space = true;}
         if (button == Input.Keys.SHIFT_LEFT) {Shift = true;}
@@ -35,6 +37,7 @@ public class ProcessInput extends InputAdapter {
         if (button == Input.Keys.S) {S = false;}
         if (button == Input.Keys.A) {A = false;}
         if (button == Input.Keys.D) {D = false;}
+        if (button == Input.Keys.P) {P = false;}
         if (button == Input.Keys.ESCAPE) {Esc = false;}
         if (button == Input.Keys.SPACE) {Space = false;}
         if (button == Input.Keys.SHIFT_LEFT) {Shift = false;}
@@ -53,6 +56,9 @@ public class ProcessInput extends InputAdapter {
     }
     public boolean getD() {
         return D;
+    }
+    public boolean getP() {
+        return P;
     }
     public boolean getSpace() {return Space;}
     public boolean getShift() {

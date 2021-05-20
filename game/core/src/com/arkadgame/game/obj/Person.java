@@ -314,7 +314,7 @@ public class Person extends CustomActor {
                 y_col = true;
             }
             if (x_col && y_col && !pinchos.getType().equalsIgnoreCase("Person")&&!pinchos.getType().equalsIgnoreCase("BaseStairs")) {
-                if (pinchos.getType().equalsIgnoreCase("Barrel")) {
+                if (pinchos.getType().equalsIgnoreCase("Barrel")||pinchos.getType().equalsIgnoreCase("Acid")) {
                     this.setAlive(false);
                     return true;
                 }
