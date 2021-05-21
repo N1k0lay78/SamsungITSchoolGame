@@ -184,8 +184,7 @@ public class MainGameScreen extends BaseScreen {
         camera.update();
         camera.combined.scl(scale);
         stage.getBatch().setProjectionMatrix(camera.combined);
-        float time = Gdx.graphics.getDeltaTime();
-        person.update(this.process, time);
+        person.update(this.process, delta); // люди придумали дельту
         stage.getBatch().begin();
         if (this.process.getEsc()) {
             this.game.setScreenMainMenu();

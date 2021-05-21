@@ -16,8 +16,6 @@ import org.omg.CORBA.PRIVATE_MEMBER;
 import java.util.ArrayList;
 
 public class MainMenu extends BaseScreen {
-    private ProcessInput process; // зачем это? если оно есть в BaseScreen
-    private ArkadGame game; // и это??
     private Stage stage;
     private Button playButton;
     private Texture buttonTexture, menuTexture;
@@ -29,8 +27,6 @@ public class MainMenu extends BaseScreen {
 
     public MainMenu(ArkadGame game, ProcessInput process) {
         super(game, process);
-        this.process = process;
-        this.game = game;
     }
 
     @Override
@@ -52,7 +48,6 @@ public class MainMenu extends BaseScreen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0.4f, 0.5f, 0.8f, 1f);
         stage.act();
-        float time = Gdx.graphics.getDeltaTime();
         boolean leftPressed = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
         float firstX = Gdx.input.getX();
         float firstY = stage.getHeight() - Gdx.input.getY();

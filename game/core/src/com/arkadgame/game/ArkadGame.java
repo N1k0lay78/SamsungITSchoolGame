@@ -17,15 +17,17 @@ public class ArkadGame extends Game {
 	private Socket socket;
 	private MainGameScreen mainGameScreen;
 	private MainMenu mainMenu;
+	private OpenGameScreen openGameScreen;
 
 	@Override
 	public void create () {
-		connectSocket();
-		configSocketEvents();
+		//connectSocket();
+		//configSocketEvents();
 		ProcessInput process = new ProcessInput();
-		mainMenu = new MainMenu(this, process);
-		mainGameScreen = new MainGameScreen(this, process, socket);
-		setScreen(mainMenu);
+		//mainMenu = new MainMenu(this, process);
+		//mainGameScreen = new MainGameScreen(this, process, socket);
+		openGameScreen = new OpenGameScreen(this, process, 1f, 2f); // будет показываться deltaSpeed * 4 + waitTime * 2 секунд
+		setScreen(openGameScreen);
 	}
 
 	public void render() {
