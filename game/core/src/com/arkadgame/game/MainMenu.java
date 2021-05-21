@@ -16,8 +16,8 @@ import org.omg.CORBA.PRIVATE_MEMBER;
 import java.util.ArrayList;
 
 public class MainMenu extends BaseScreen {
-    private ProcessInput process;
-    private ArkadGame game;
+    private ProcessInput process; // зачем это? если оно есть в BaseScreen
+    private ArkadGame game; // и это??
     private Stage stage;
     private Button playButton;
     private Texture buttonTexture, menuTexture;
