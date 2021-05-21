@@ -58,7 +58,6 @@ public class MainMenu extends BaseScreen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0.4f, 0.5f, 0.8f, 1f);
         stage.act();
-        float time = Gdx.graphics.getDeltaTime();
         boolean leftPressed = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
         float firstX = Gdx.input.getX();
         float firstY = stage.getHeight() - Gdx.input.getY();

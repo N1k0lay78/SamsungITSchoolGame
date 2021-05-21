@@ -15,8 +15,13 @@ import jdk.nashorn.api.scripting.JSObject;
 
 public class ArkadGame extends Game {
 	private Socket socket;
+	private boolean isScreensaverOver;
 	private MainGameScreen mainGameScreen;
 	private MainMenu mainMenu;
+	private OpenGameScreen openGameScreen;
+
+	public ArkadGame() {
+	}
 	private String currentScene;
 	private ProcessInput process;
 
@@ -29,6 +34,13 @@ public class ArkadGame extends Game {
 		mainGameScreen = new MainGameScreen(this, process, socket);
 		setScreen(mainMenu);
 		currentScene = "MainMenu";
+		//connectSocket();
+		//configSocketEvents();
+		ProcessInput process = new ProcessInput();
+		//mainMenu = new MainMenu(this, process);
+		//mainGameScreen = new MainGameScreen(this, process, socket);
+		openGameScreen = new OpenGameScreen(this, process, 1f, 2f); // будет показываться deltaSpeed * 4 + waitTime * 2 секунд
+		setScreen(openGameScreen);
 	}
 
 	public void render() {
@@ -105,5 +117,13 @@ public class ArkadGame extends Game {
 				}
 			}
 		});
+	}
+
+	public boolean isScreensaverOver() {
+		return isScreensaverOver;
+	}
+
+	public void setScreensaverOver(boolean screensaverOver) {
+		isScreensaverOver = screensaverOver;
 	}
 }
