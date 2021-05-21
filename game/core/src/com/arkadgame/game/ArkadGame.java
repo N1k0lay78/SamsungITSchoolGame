@@ -33,7 +33,7 @@ public class ArkadGame extends Game {
 		mainMenu = new MainMenu(this, process);
 		mainGameScreen = new MainGameScreen(this, process, socket);
 		setScreen(mainMenu);
-		currentScene = "MainMenu";
+		currentScene = "OpenGameScreen";
 		//connectSocket();
 		//configSocketEvents();
 		ProcessInput process = new ProcessInput();
@@ -44,7 +44,8 @@ public class ArkadGame extends Game {
 	}
 
 	public void render() {
-		if (process.getEsc()&&currentScene.equals("Level1")) {
+		if ((process.getEsc()&&currentScene.equals("Level1"))||isScreensaverOver) {
+			isScreensaverOver = false;
 			currentScene = "MainMenu";
 			setScreen(mainMenu);
 		}
@@ -52,8 +53,6 @@ public class ArkadGame extends Game {
 			currentScene = "Level1";
 			mainMenu.clear();
 			setScreen(mainGameScreen);
-			System.out.println(mainMenu.isClear());
-
 		}
 		super.render();
 	}

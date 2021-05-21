@@ -62,14 +62,12 @@ public class MainGameScreen extends BaseScreen {
         Gdx.input.setInputProcessor(process);
         person = new Person(personTexture);
         person.setPosition(100, 900);
-        System.out.println("Game");
         camera = new OrthographicCamera(width, height);
         float c_x = person.getX(), c_y = person.getY();
         if (c_x < minX) {c_x = minX;} else if (c_x > maxX) {c_x = maxX;}
         if (c_y < minY) {c_y = minY;} else if (c_x > maxY) {c_y = maxY;}
         camera.position.set(c_x, c_y, 0f);
         camera.update();
-        System.out.println(camera.viewportHeight + " " + camera.viewportWidth);
         System.out.println("CreateGame");
         this.recreate();
     }
@@ -82,15 +80,12 @@ public class MainGameScreen extends BaseScreen {
         stage = new Stage();
         stage.getViewport().setCamera(camera);
         this.scale = stage.getWidth() / height;
-        System.out.println(scale);
         Background background = new Background(menuTexture);
         stage.addActor(background);
-        System.out.println(stage.getWidth() + " " + stage.getHeight());
         this.minX = (stage.getWidth() / 2);
         this.maxX = (1056 * scale - stage.getWidth() / 2);
         this.minY = (stage.getHeight() / 2);
         if (maxX < minX) {maxX *= 2;}
-        System.out.println(minX + " " + maxX + " " + minY + " " + scale);
         this.create_acid_on(0, 0, 22);
         this.create_platform_on(144, 96, 19);
         this.create_platform_on(48, 288, 17);

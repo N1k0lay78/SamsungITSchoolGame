@@ -25,7 +25,6 @@ public class Button extends CustomActor {
         this.sizeY = sizeY;
         this.setSize(sizeX * zoom, sizeY * zoom);
         buttonRegion = new TextureRegion(buttonTexture, _x, _y, sizeX, sizeY);
-        System.out.println(123);
     }
 
     public int getSizeX() {return sizeX;}

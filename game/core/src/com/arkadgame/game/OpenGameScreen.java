@@ -19,7 +19,7 @@ public class OpenGameScreen extends BaseScreen {
     // какая картинка
     private int page;
     // режим отладки картиок (будут крутиться по кругу и не выключаться)
-    final private boolean test = true;
+    final private boolean test = false;
     // для отрисовки
     final private SpriteBatch batch;
     private int width;
@@ -84,7 +84,7 @@ public class OpenGameScreen extends BaseScreen {
                 page = 0;
             }
             // System.out.println(alpha + " " + wait + " " + page);
-            System.out.println((float) (width / 2 - 0.3f * height) + " " + (float) (0.2f * height) + " " + (float) (0.6f * height) + " " + (float) (0.6f * height));
+            //System.out.println((float) (width / 2 - 0.3f * height) + " " + (float) (0.2f * height) + " " + (float) (0.6f * height) + " " + (float) (0.6f * height));
         }
         // перекладываем бардюры
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -109,7 +109,6 @@ public class OpenGameScreen extends BaseScreen {
         this.height = height;
         batch.getProjectionMatrix().setToOrtho2D(0, 0, this.width, this.height);
         if (test) {
-            System.out.println("Update size" + width + "x" + height);
         }
     }
 
