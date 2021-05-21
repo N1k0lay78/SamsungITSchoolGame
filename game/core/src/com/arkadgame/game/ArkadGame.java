@@ -15,9 +15,13 @@ import jdk.nashorn.api.scripting.JSObject;
 
 public class ArkadGame extends Game {
 	private Socket socket;
+	private boolean isScreensaverOver;
 	private MainGameScreen mainGameScreen;
 	private MainMenu mainMenu;
 	private OpenGameScreen openGameScreen;
+
+	public ArkadGame() {
+	}
 
 	@Override
 	public void create () {
@@ -31,7 +35,6 @@ public class ArkadGame extends Game {
 	}
 
 	public void render() {
-		System.out.println(12345);
 		super.render(); // ПЕРЕДЕЛАТЬ!!!!!!!!!!
 	}
 
@@ -94,5 +97,13 @@ public class ArkadGame extends Game {
 				}
 			}
 		});
+	}
+
+	public boolean isScreensaverOver() {
+		return isScreensaverOver;
+	}
+
+	public void setScreensaverOver(boolean screensaverOver) {
+		isScreensaverOver = screensaverOver;
 	}
 }
