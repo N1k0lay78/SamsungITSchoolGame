@@ -28,10 +28,7 @@ import io.socket.client.Socket;
 
 public class MainGameScreen extends BaseScreen {
     public MainGameScreen (ArkadGame game, ProcessInput process, Socket socket) {
-
         super(game, process);
-        this.process = process;
-        this.game = game;
         menuTexture = new Texture("menu.png");
         personTexture = new Texture("player_anim.png");
         texturaPinchos = new Texture("tileset_16.png");
@@ -42,14 +39,12 @@ public class MainGameScreen extends BaseScreen {
         regionStairs1 = new TextureRegion(texturaPinchos, 16, 16, 16, 16);
     }
 
-    private ArkadGame game;
-    private ProcessInput process;
     private Stage stage;
     private Person person;
     private Texture personTexture, texturaPinchos, menuTexture;
     private TextureRegion regionPinchos1, regionPinchos2, regionPinchos3, regionStairs1, regionStairs2;
     private int speed = 2;
-    private float minX = 224;
+    private float minX = 500;
     private float maxX = 640;
     private float minY = 240f;
     private float maxY = 1800f;
@@ -60,11 +55,14 @@ public class MainGameScreen extends BaseScreen {
     private ArrayList<CustomActor> pinchos;
     private OrthographicCamera camera;
     private float scale = 1;
+    private boolean clear = true;
 
     @Override
     public void show() {
         Gdx.input.setInputProcessor(process);
         person = new Person(personTexture);
+        person.setPosition(100, 900);
+        System.out.println("Game");
         camera = new OrthographicCamera(width, height);
         float c_x = person.getX(), c_y = person.getY();
         if (c_x < minX) {c_x = minX;} else if (c_x > maxX) {c_x = maxX;}
@@ -72,10 +70,14 @@ public class MainGameScreen extends BaseScreen {
         camera.position.set(c_x, c_y, 0f);
         camera.update();
         System.out.println(camera.viewportHeight + " " + camera.viewportWidth);
+        System.out.println("CreateGame");
         this.recreate();
     }
 
+    public boolean isClear() {return clear;}
+
     public void recreate() {
+        clear = false;
         this.pinchos = new ArrayList<>(2000);
         stage = new Stage();
         stage.getViewport().setCamera(camera);
@@ -99,13 +101,13 @@ public class MainGameScreen extends BaseScreen {
         this.create_stairs_on(684, 528, 4);
         stage.addActor(person);
         pinchos.add(person);
-        this.create_barrel(400, 1720);
-        this.create_barrel(400, 820);
+        this.create_barrel(500, 840);
+        /*this.create_barrel(400, 1720);
         this.create_barrel(400, 950);
         this.create_barrel(400, 1050);
         this.create_barrel(400, 1200);
         this.create_barrel(400, 1350);
-        this.create_barrel(400, 1500);
+        this.create_barrel(400, 1500); */
         person.setPinchoss(this.pinchos);
         person.setPosition(260, 160);
     }
@@ -161,6 +163,7 @@ public class MainGameScreen extends BaseScreen {
     @Override
     public void hide() {
         stage.dispose();
+        clear = true;
     }
 
     @Override
@@ -187,9 +190,6 @@ public class MainGameScreen extends BaseScreen {
         float time = Gdx.graphics.getDeltaTime();
         person.update(this.process, time);
         stage.getBatch().begin();
-        if (this.process.getEsc()) {
-            this.game.setScreenMainMenu();
-        }
         for (Actor i : stage.getActors()) {
             i.draw(stage.getBatch(), 0);
         }
@@ -203,5 +203,6 @@ public class MainGameScreen extends BaseScreen {
     @Override
     public void dispose() {
         stage.dispose();
+        clear = true;
     }
 }

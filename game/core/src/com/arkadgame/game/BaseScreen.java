@@ -6,7 +6,6 @@ import com.badlogic.gdx.Screen;
 public class BaseScreen implements Screen {
     protected ProcessInput process;
     protected ArkadGame game;
-    private boolean a = false; // зачем?
 
     public BaseScreen(ArkadGame game, ProcessInput process) {
         this.game = game;

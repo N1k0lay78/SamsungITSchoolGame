@@ -16,8 +16,6 @@ import org.omg.CORBA.PRIVATE_MEMBER;
 import java.util.ArrayList;
 
 public class MainMenu extends BaseScreen {
-    private ProcessInput process; // зачем это? если оно есть в BaseScreen
-    private ArkadGame game; // и это??
     private Stage stage;
     private Button playButton;
     private Texture buttonTexture, menuTexture;
@@ -25,16 +23,17 @@ public class MainMenu extends BaseScreen {
     private ArrayList<Button> buttons;
     private int width = 720;
     private int height = 480;
+    private String currButton = "None";
     private float scale = 1;
+    private boolean clear = true;
 
     public MainMenu(ArkadGame game, ProcessInput process) {
         super(game, process);
-        this.process = process;
-        this.game = game;
     }
 
     @Override
     public void show() {
+        clear = false;
         stage = new Stage();
         scale = stage.getWidth() / width;
         buttons = new ArrayList<>(100);
@@ -46,6 +45,13 @@ public class MainMenu extends BaseScreen {
         buttons.add(playButton);
         stage.addActor(new Background(menuTexture));
         stage.addActor(playButton);
+        System.out.println("CreateMenu");
+    }
+
+    public boolean isClear() {return clear;}
+
+    public String getCurrButton() {
+        return currButton;
     }
 
     @Override
@@ -56,13 +62,7 @@ public class MainMenu extends BaseScreen {
         boolean leftPressed = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
         float firstX = Gdx.input.getX();
         float firstY = stage.getHeight() - Gdx.input.getY();
-        checkButtonPress(firstX, firstY);
-        if (leftPressed) {
-            String buttonType = checkButtonPress(firstX, firstY);
-            System.out.println(buttonType);
-            if (buttonType.equals("PlayButton")) {this.game.setScreenMainGameScreen();}
-        }
-        // if (!this.process.getEsc()) {this.game.setScreenMainGameScreen(); this.game.recreateLevel();}
+        checkButtonPress(firstX, firstY, leftPressed);
         stage.getBatch().begin();
         stage.getCamera().combined.scl(scale);
         for (Actor i: stage.getActors()) {
@@ -71,12 +71,16 @@ public class MainMenu extends BaseScreen {
         stage.getBatch().end();
     }
 
-    private String checkButtonPress(float x, float y) {
-        String buttonType = "None";
+    private void checkButtonPress(float x, float y, boolean press) {
+        currButton = "None";
         for (Button i: buttons) {
-            if (i.checkCollision(x, y)) {buttonType = i.getType();}
+            if (i.checkCollision(x, y)) {
+                i.setActive(true);
+                if (press) {currButton = i.getType();}
+            } else {
+                i.setActive(false);
+            }
         }
-        return buttonType;
     }
 
     public void resize(int width, int height) {
@@ -96,11 +100,16 @@ public class MainMenu extends BaseScreen {
 
     @Override
     public void hide() {
-
+        stage.dispose();
+        clear = true;
     }
 
     @Override
     public void dispose() {
+        clear = true;
+    }
 
+    public void clear() {
+        currButton = "None";
     }
 }

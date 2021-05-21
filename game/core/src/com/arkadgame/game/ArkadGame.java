@@ -17,20 +17,33 @@ public class ArkadGame extends Game {
 	private Socket socket;
 	private MainGameScreen mainGameScreen;
 	private MainMenu mainMenu;
+	private String currentScene;
+	private ProcessInput process;
 
 	@Override
 	public void create () {
 		connectSocket();
 		configSocketEvents();
-		ProcessInput process = new ProcessInput();
+		process = new ProcessInput();
 		mainMenu = new MainMenu(this, process);
 		mainGameScreen = new MainGameScreen(this, process, socket);
 		setScreen(mainMenu);
+		currentScene = "MainMenu";
 	}
 
 	public void render() {
-		System.out.println(12345);
-		super.render(); // ПЕРЕДЕЛАТЬ!!!!!!!!!!
+		if (process.getEsc()&&currentScene.equals("Level1")) {
+			currentScene = "MainMenu";
+			setScreen(mainMenu);
+		}
+		if (currentScene.equals("MainMenu")&&mainMenu.getCurrButton().equalsIgnoreCase("PlayButton")) {
+			currentScene = "Level1";
+			mainMenu.clear();
+			setScreen(mainGameScreen);
+			System.out.println(mainMenu.isClear());
+
+		}
+		super.render();
 	}
 
 	public void recreateLevel() {this.mainGameScreen.recreate();}
