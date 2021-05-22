@@ -26,7 +26,7 @@ public class MainMenu extends BaseScreen {
     private int width;
     private int height;
     // текстуры с кнопками и фоном
-    private Texture buttonTexture, menuTexture;
+    final private Texture buttonTexture, menuTexture;
     // для анимации
     private float zoom;
     private int movingButton;
@@ -137,7 +137,7 @@ public class MainMenu extends BaseScreen {
         for (Button butt: buttons) {
             if (butt.checkCollision(x, y)) {
                 // System.out.println("HAVE ACTIVE BUTTON");
-                butt.setActive(true);
+                butt.setActive(true); // зачем если это делается в колижн?
                 activeButton = butt;
                 if (press) { currButton = butt.getType(); }
                 break;
