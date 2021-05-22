@@ -97,18 +97,18 @@ public class MainGameScreen extends BaseScreen {
         stage.addActor(person);
         pinchos.add(person);
         this.create_barrel(500, 840);
-        /*this.create_barrel(400, 1720);
+        this.create_barrel(400, 1720);
         this.create_barrel(400, 950);
         this.create_barrel(400, 1050);
         this.create_barrel(400, 1200);
         this.create_barrel(400, 1350);
-        this.create_barrel(400, 1500); */
+        this.create_barrel(400, 1500);
         person.setPinchoss(this.pinchos);
         person.setPosition(260, 160);
     }
 
     private void create_barrel(int x, int y) {
-        Barrel bar = new Barrel(texturaPinchos, x, y);
+        Barrel bar = new Barrel(texturaPinchos, person, x, y);
         bar.setPosition(x, -1000);
         bar.setPinchoss(this.pinchos);
         stage.addActor(bar);
