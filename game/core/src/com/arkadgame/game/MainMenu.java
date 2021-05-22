@@ -32,7 +32,7 @@ public class MainMenu extends BaseScreen {
     private float progress;
     private float speed;
     // режим отладки картиок (будут крутиться по кругу и не выключаться)
-    final private boolean test = true;
+    final private boolean test = false;
     // кнопки
     private ArrayList<Button> buttons;
     private Button activeButton;
@@ -83,15 +83,17 @@ public class MainMenu extends BaseScreen {
     @Override
     public void render(float delta) {
         // aнимация
-        buttons.get(movingButton).setX(buttons.get(movingButton).getX() + delta * speed);
-        if (buttons.get(movingButton).getX() >= height * 0.1f) {
-            movingButton++;
-            if (test) {
-                if (movingButton > buttons.size() - 1) {
-                    movingButton = 0;
+        if (movingButton < buttons.size()) {
+            buttons.get(movingButton).setX(buttons.get(movingButton).getX() + delta * speed);
+            if (buttons.get(movingButton).getX() >= height * 0.1f) {
+                movingButton++;
+                if (test) {
+                    if (movingButton > buttons.size() - 1) {
+                        movingButton = 0;
+                    }
                 }
+                buttons.get(movingButton).setX(-buttons.get(movingButton).getWidth());
             }
-            buttons.get(movingButton).setX(-buttons.get(movingButton).getWidth());
         }
         // обновление
         float firstX = Gdx.input.getX();
