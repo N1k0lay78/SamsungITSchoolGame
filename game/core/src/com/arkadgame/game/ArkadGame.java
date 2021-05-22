@@ -30,13 +30,15 @@ public class ArkadGame extends Game {
 		connectSocket();
 		configSocketEvents();
 		process = new ProcessInput();
-		mainMenu = new MainMenu(this, process, 500f);
+		mainMenu = new MainMenu(this, process, 700f);
 		mainGameScreen = new MainGameScreen(this, process, socket);
 		setScreen(mainMenu);
 		currentScene = "OpenGameScreen";
 		//connectSocket();
 		//configSocketEvents();
-		ProcessInput process = new ProcessInput();
+		this.process = new ProcessInput();
+		Gdx.input.setInputProcessor(this.process);
+
 		mainGameScreen = new MainGameScreen(this, process, socket);
 		openGameScreen = new OpenGameScreen(this, process, 1f, 1f); // будет показываться deltaSpeed * 4 + waitTime * 2 секунд
 		setScreen(openGameScreen);
@@ -48,8 +50,12 @@ public class ArkadGame extends Game {
 			currentScene = "MainMenu";
 			setScreen(mainMenu);
 		}
+		if (mainMenu.getCurrButton().equalsIgnoreCase("ExitButton")) {
+			Gdx.app.exit();
+		}
 		if (currentScene.equals("MainMenu")&&mainMenu.getCurrButton().equalsIgnoreCase("PlayButton")) {
 			currentScene = "Level1";
+			mainMenu.clearAction();
 			setScreen(mainGameScreen);
 		}
 		super.render();
