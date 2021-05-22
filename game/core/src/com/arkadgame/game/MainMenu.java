@@ -92,7 +92,9 @@ public class MainMenu extends BaseScreen {
                         movingButton = 0;
                     }
                 }
-                buttons.get(movingButton).setX(-buttons.get(movingButton).getWidth());
+                if (movingButton < buttons.size()) {
+                    buttons.get(movingButton).setX(-buttons.get(movingButton).getWidth());
+                }
             }
         }
         // обновление
@@ -103,9 +105,6 @@ public class MainMenu extends BaseScreen {
         // перекладывание бардюров
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         if (test) {
-            if (movingButton > buttons.size() - 1) {
-                movingButton = 0;
-            }
             System.out.println(progress + " " + (buttons.get(movingButton).getWidth() + height * 0.1f));
         }
         // отрисовка
