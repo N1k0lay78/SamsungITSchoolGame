@@ -16,7 +16,7 @@ public class Barrel extends CustomActor {
     private ArrayList<CustomActor> pinchoss;
     private TextureRegion barrelRegion;
     private Texture barrelTexture;
-    private float gravity = 1925;
+    private float gravity = 1700;
     private int frame = 1;
     private float angle = 1;
     private float speedRotation = 525f;

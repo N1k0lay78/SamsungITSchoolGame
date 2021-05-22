@@ -28,6 +28,7 @@ public class MainMenu extends BaseScreen {
     // текстуры с кнопками и фоном
     private Texture buttonTexture, menuTexture;
     // для анимации
+    private float zoom;
     private int movingButton;
     private float progress;
     private float speed;
@@ -37,6 +38,7 @@ public class MainMenu extends BaseScreen {
     private ArrayList<Button> buttons;
     private Button activeButton;
     private String currButton = "None";
+    private float offset;
 
     public MainMenu(ArkadGame game, ProcessInput process, float speedAnimation) {
         super(game, process);
@@ -56,13 +58,14 @@ public class MainMenu extends BaseScreen {
     @Override
     public void show() {
         // пересоздаём кнопки при открытии или ресайзе
-        float zoom = height / 200;
+        movingButton = 0;
+        zoom = height / 200f;
         System.out.println(zoom);
         buttons = new ArrayList<>(4);
         Button button; // Button(buttonTexture, sizeX, sizeY, x, y, zoom, true);
         button = new Button(buttonTexture, 133, 32, 128, 0, zoom, true);
         button.setType("PlayButton");
-        button.setPosition(-button.getWidth(),height - height * 0.1f - 32 * zoom);
+        button.setPosition(-button.getWidth(),height - this.offset - 32 * zoom);
         buttons.add(button);
         button = new Button(buttonTexture, 196, 32, 272, 0, zoom, true);
         button.setType("SettingButton");
@@ -75,7 +78,7 @@ public class MainMenu extends BaseScreen {
         /*
         button = new Button(buttonTexture, 128, 0, 133, 32, zoom, true);
         button.setType("OnlineButton");
-        button.setPosition(height * 0.1f,height - height * 0.4f - 4 * 32 * zoom);
+        button.setPosition(this.offset,height - height * 0.4f - 4 * 32 * zoom);
         buttons.add(button);
          */
     }
@@ -84,8 +87,8 @@ public class MainMenu extends BaseScreen {
     public void render(float delta) {
         // aнимация
         if (movingButton < buttons.size()) {
-            buttons.get(movingButton).setX(buttons.get(movingButton).getX() + delta * speed);
-            if (buttons.get(movingButton).getX() >= height * 0.1f) {
+            buttons.get(movingButton).setX(buttons.get(movingButton).getX() + delta * speed * zoom);
+            if (buttons.get(movingButton).getX() >= this.offset) {
                 movingButton++;
                 if (test) {
                     if (movingButton > buttons.size() - 1) {
@@ -105,19 +108,24 @@ public class MainMenu extends BaseScreen {
         // перекладывание бардюров
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         if (test) {
-            System.out.println(progress + " " + (buttons.get(movingButton).getWidth() + height * 0.1f));
+            System.out.println(progress + " " + (buttons.get(movingButton).getWidth() + this.offset));
         }
         // отрисовка
         batch.begin();
         batch.draw(menuTexture, 0, 0, width, height);
         for (int i=0; i < buttons.size(); i++) {
             if (i < movingButton) {
+                buttons.get(i).setX(this.offset);
                 buttons.get(i).draw(batch, 1f);
             } else if (i == movingButton) {
-                buttons.get(i).draw(batch, (buttons.get(movingButton).getX() + buttons.get(i).getWidth())/(buttons.get(i).getWidth() + height * 0.1f));
+                buttons.get(i).draw(batch, (buttons.get(movingButton).getX() + buttons.get(i).getWidth())/(buttons.get(i).getWidth() + this.offset));
             }
         }
         batch.end();
+    }
+
+    public void clearAction() {
+        this.currButton = "None";
     }
 
     private void checkButtonPress(float x, float y, boolean press) {
@@ -141,6 +149,7 @@ public class MainMenu extends BaseScreen {
         // получаем размер экрана
         this.width = width;
         this.height = height;
+        this.offset = height * 0.1f;
         batch.getProjectionMatrix().setToOrtho2D(0, 0, this.width, this.height);
         show();
     }
