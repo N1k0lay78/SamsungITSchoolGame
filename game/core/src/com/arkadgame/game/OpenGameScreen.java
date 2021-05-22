@@ -16,8 +16,7 @@ public class OpenGameScreen extends BaseScreen {
     final private float deltaSpeed;
     final private float waitTime;
     private float wait;
-    // какая картинка
-    private int page;
+    private int page; // какая картинка
     // режим отладки картиок (будут крутиться по кругу и не выключаться)
     final private boolean test = false;
     // для отрисовки
@@ -34,7 +33,7 @@ public class OpenGameScreen extends BaseScreen {
         // загружаем изображения
         logo = new Texture(Gdx.files.internal("logo_war_2.png"));
         nameGame = new Texture(Gdx.files.internal("cybercong.png"));
-        // загружаем изображения
+        // создаём batch
         batch = new SpriteBatch();
         // задаём тайминги
         this.waitTime = waitTime;
@@ -43,7 +42,7 @@ public class OpenGameScreen extends BaseScreen {
         // какую картинку показывать
         this.page = 0;
         // задаём цвет заливки
-        Gdx.gl.glClearColor(0.4f, 0.5f, 0.8f, 1f);
+        Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
         // мы ничего не пропускаем
         skipped = false;
     }
@@ -51,7 +50,7 @@ public class OpenGameScreen extends BaseScreen {
     @Override
     public void render(float delta) {
         // сложо очень сложно
-        if (alpha < 1f) {
+            if (alpha < 1f) {
             if (wait > 0) { // появление изображения
                 alpha += deltaSpeed * delta;
             } else { // стерание изображения
@@ -108,8 +107,6 @@ public class OpenGameScreen extends BaseScreen {
         this.width = width;
         this.height = height;
         batch.getProjectionMatrix().setToOrtho2D(0, 0, this.width, this.height);
-        if (test) {
-        }
     }
 
     public void dispose() {

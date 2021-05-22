@@ -1,5 +1,6 @@
 package com.arkadgame.game.obj;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -30,6 +31,8 @@ public class Button extends CustomActor {
     public int getSizeX() {return sizeX;}
 
     public int getSizeY() {return sizeY;}
+
+    public float getWidth() {return  sizeX * zoom;}
 
     public boolean checkCollision(float x, float y) {
         if (this.getX() < x&& x < this.getX() + this.getSizeX() * zoom&&
@@ -62,6 +65,9 @@ public class Button extends CustomActor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
+        //System.out.println(getX() + "X" + getY() + ":" + sizeX * zoom + "X" + sizeY * zoom + "test" + zoom);
+        batch.setColor(new Color(1,1,1,parentAlpha));
         batch.draw(buttonRegion, getX(), getY(), sizeX * zoom, sizeY * zoom);
+        batch.setColor(new Color(1,1,1,1));
     }
 }

@@ -6,7 +6,10 @@ import com.arkadgame.game.obj.CustomActor;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -15,100 +18,138 @@ import org.omg.CORBA.PRIVATE_MEMBER;
 
 import java.util.ArrayList;
 
-public class MainMenu extends BaseScreen {
-    private Stage stage;
-    private Button playButton;
-    private Texture buttonTexture, menuTexture;
-    private ArrayList<CustomActor> pinchos;
-    private ArrayList<Button> buttons;
-    private int width = 720;
-    private int height = 480;
-    private String currButton = "None";
-    private float scale = 1;
-    private boolean clear = true;
+import javax.crypto.spec.PSource;
 
-    public MainMenu(ArkadGame game, ProcessInput process) {
+public class MainMenu extends BaseScreen {
+    // для отрисовки
+    private SpriteBatch batch;
+    private int width;
+    private int height;
+    // текстуры с кнопками и фоном
+    private Texture buttonTexture, menuTexture;
+    // для анимации
+    private int movingButton;
+    private float progress;
+    private float speed;
+    // режим отладки картиок (будут крутиться по кругу и не выключаться)
+    final private boolean test = true;
+    // кнопки
+    private ArrayList<Button> buttons;
+    private Button activeButton;
+    private String currButton = "None";
+
+    public MainMenu(ArkadGame game, ProcessInput process, float speedAnimation) {
         super(game, process);
+        // загружаем текстурки
+        buttonTexture = new Texture(Gdx.files.internal("buttons.png"));
+        menuTexture = new Texture(Gdx.files.internal("menu_2.png"));
+        // создаём batch
+        batch = new SpriteBatch();
+        // переменные для анимации
+        movingButton = 0;
+        progress = 0f;
+        speed = speedAnimation;
+        // задаём цвет фона
+        Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
     }
 
     @Override
     public void show() {
-        clear = false;
-        stage = new Stage();
-        scale = stage.getWidth() / width;
-        buttons = new ArrayList<>(100);
-        menuTexture = new Texture("menu.png");
-        buttonTexture = new Texture("buttons.png");
-        playButton = new Button(buttonTexture, 133, 32, 128, 0, 2f * scale,true);
-        playButton.setType("PlayButton");
-        playButton.setPosition(180, 150);
-        buttons.add(playButton);
-        stage.addActor(new Background(menuTexture));
-        stage.addActor(playButton);
-        System.out.println("CreateMenu");
-    }
-
-    public boolean isClear() {return clear;}
-
-    public String getCurrButton() {
-        return currButton;
+        // пересоздаём кнопки при открытии или ресайзе
+        float zoom = height / 200;
+        System.out.println(zoom);
+        buttons = new ArrayList<>(4);
+        Button button; // Button(buttonTexture, sizeX, sizeY, x, y, zoom, true);
+        button = new Button(buttonTexture, 133, 32, 128, 0, zoom, true);
+        button.setType("PlayButton");
+        button.setPosition(-button.getWidth(),height - height * 0.1f - 32 * zoom);
+        buttons.add(button);
+        button = new Button(buttonTexture, 196, 32, 272, 0, zoom, true);
+        button.setType("SettingButton");
+        button.setPosition(-button.getWidth(),height - height * 0.2f - 2 * 32 * zoom);
+        buttons.add(button);
+        button = new Button(buttonTexture, 118, 32, 480, 0, zoom, true);
+        button.setType("ExitButton");
+        button.setPosition(-button.getWidth(),height - height * 0.3f - 3 * 32 * zoom);
+        buttons.add(button);
+        /*
+        button = new Button(buttonTexture, 128, 0, 133, 32, zoom, true);
+        button.setType("OnlineButton");
+        button.setPosition(height * 0.1f,height - height * 0.4f - 4 * 32 * zoom);
+        buttons.add(button);
+         */
     }
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0.4f, 0.5f, 0.8f, 1f);
-        stage.act();
-        boolean leftPressed = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
-        float firstX = Gdx.input.getX();
-        float firstY = stage.getHeight() - Gdx.input.getY();
-        checkButtonPress(firstX, firstY, leftPressed);
-        stage.getBatch().begin();
-        stage.getCamera().combined.scl(scale);
-        for (Actor i: stage.getActors()) {
-            i.draw(stage.getBatch(), 0);
+        // aнимация
+        buttons.get(movingButton).setX(buttons.get(movingButton).getX() + delta * speed);
+        if (buttons.get(movingButton).getX() >= height * 0.1f) {
+            movingButton++;
+            if (test) {
+                if (movingButton > buttons.size() - 1) {
+                    movingButton = 0;
+                }
+            }
+            buttons.get(movingButton).setX(-buttons.get(movingButton).getWidth());
         }
-        stage.getBatch().end();
+        // обновление
+        float firstX = Gdx.input.getX();
+        float firstY = height - Gdx.input.getY();
+        boolean leftPressed = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
+        checkButtonPress(firstX, firstY, leftPressed);
+        // перекладывание бардюров
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        if (test) {
+            if (movingButton > buttons.size() - 1) {
+                movingButton = 0;
+            }
+            System.out.println(progress + " " + (buttons.get(movingButton).getWidth() + height * 0.1f));
+        }
+        // отрисовка
+        batch.begin();
+        batch.draw(menuTexture, 0, 0, width, height);
+        for (int i=0; i < buttons.size(); i++) {
+            if (i < movingButton) {
+                buttons.get(i).draw(batch, 1f);
+            } else if (i == movingButton) {
+                buttons.get(i).draw(batch, (buttons.get(movingButton).getX() + buttons.get(i).getWidth())/(buttons.get(i).getWidth() + height * 0.1f));
+            }
+        }
+        batch.end();
     }
 
     private void checkButtonPress(float x, float y, boolean press) {
+        if (activeButton != null) {
+            activeButton.setActive(false);
+            activeButton = null;
+        }
         currButton = "None";
-        for (Button i: buttons) {
-            if (i.checkCollision(x, y)) {
-                i.setActive(true);
-                if (press) {currButton = i.getType();}
-            } else {
-                i.setActive(false);
+        for (Button butt: buttons) {
+            if (butt.checkCollision(x, y)) {
+                // System.out.println("HAVE ACTIVE BUTTON");
+                butt.setActive(true);
+                activeButton = butt;
+                if (press) { currButton = butt.getType(); }
+                break;
             }
         }
     }
 
     public void resize(int width, int height) {
-        stage.getViewport().update(width, height, false);
+        // получаем размер экрана
+        this.width = width;
+        this.height = height;
+        batch.getProjectionMatrix().setToOrtho2D(0, 0, this.width, this.height);
         show();
     }
 
     @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
     public void hide() {
-        stage.dispose();
-        clear = true;
+
     }
 
-    @Override
-    public void dispose() {
-        clear = true;
-    }
-
-    public void clear() {
-        currButton = "None";
+    public String getCurrButton() {
+        return currButton;
     }
 }
