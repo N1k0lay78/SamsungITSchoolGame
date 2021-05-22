@@ -26,13 +26,13 @@ public class MainMenu extends BaseScreen {
     private int width;
     private int height;
     // текстуры с кнопками и фоном
-    private Texture buttonTexture, menuTexture;
+    final private Texture buttonTexture, menuTexture;
     // для анимации
     private int movingButton;
     private float progress;
     private float speed;
     // режим отладки картиок (будут крутиться по кругу и не выключаться)
-    final private boolean test = true;
+    final private boolean test = false;
     // кнопки
     private ArrayList<Button> buttons;
     private Button activeButton;
@@ -56,7 +56,7 @@ public class MainMenu extends BaseScreen {
     @Override
     public void show() {
         // пересоздаём кнопки при открытии или ресайзе
-        float zoom = height / 200;
+        float zoom = (float) height / 200;
         System.out.println(zoom);
         buttons = new ArrayList<>(4);
         Button button; // Button(buttonTexture, sizeX, sizeY, x, y, zoom, true);
@@ -83,15 +83,19 @@ public class MainMenu extends BaseScreen {
     @Override
     public void render(float delta) {
         // aнимация
-        buttons.get(movingButton).setX(buttons.get(movingButton).getX() + delta * speed);
-        if (buttons.get(movingButton).getX() >= height * 0.1f) {
-            movingButton++;
-            if (test) {
-                if (movingButton > buttons.size() - 1) {
-                    movingButton = 0;
+        if (movingButton < buttons.size()) {
+            buttons.get(movingButton).setX(buttons.get(movingButton).getX() + delta * speed);
+            if (buttons.get(movingButton).getX() >= height * 0.1f) {
+                movingButton++;
+                if (test) {
+                    if (movingButton > buttons.size() - 1) {
+                        movingButton = 0;
+                    }
+                }
+                if (movingButton < buttons.size()) {
+                    buttons.get(movingButton).setX(-buttons.get(movingButton).getWidth());
                 }
             }
-            buttons.get(movingButton).setX(-buttons.get(movingButton).getWidth());
         }
         // обновление
         float firstX = Gdx.input.getX();
@@ -101,9 +105,6 @@ public class MainMenu extends BaseScreen {
         // перекладывание бардюров
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         if (test) {
-            if (movingButton > buttons.size() - 1) {
-                movingButton = 0;
-            }
             System.out.println(progress + " " + (buttons.get(movingButton).getWidth() + height * 0.1f));
         }
         // отрисовка
@@ -128,7 +129,7 @@ public class MainMenu extends BaseScreen {
         for (Button butt: buttons) {
             if (butt.checkCollision(x, y)) {
                 // System.out.println("HAVE ACTIVE BUTTON");
-                butt.setActive(true);
+                butt.setActive(true); // зачем если это делается в колижн?
                 activeButton = butt;
                 if (press) { currButton = butt.getType(); }
                 break;
