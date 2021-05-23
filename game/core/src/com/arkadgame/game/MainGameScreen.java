@@ -99,7 +99,6 @@ public class MainGameScreen extends BaseScreen {
     public void recreate() {
         person = new Person(personTexture);
         terminator = new Terminator(terminatorTexture, this, person);
-        terminator.setPosition(100, 720);
         float c_x = person.getX(), c_y = person.getY();
         if (c_x < minX) {
             c_x = minX;
@@ -128,7 +127,61 @@ public class MainGameScreen extends BaseScreen {
         if (maxX < minX) {
             maxX *= 2;
         }
+        int layer = 0;
+        int step = 48;
+        int stairs = 10;
+        for (int i=stairs; i > 0; i--) {
+            layer = i*4 + 2;
+            if (i % 2 == 0) {
+                this.create_platform_on(step, layer*step, 17);
+                if (i != stairs) {
+                    this.create_stairs_on(step*16, (layer+1)*step, 4);
+                } else {
+                    terminator.setPosition(3*step, (layer+1)*step);
+                }
+            } else {
+                this.create_platform_on(5*step, layer*step, 17);
+                if (i != stairs) {
+                    this.create_stairs_on(step*7, (layer+1)*step, 4);
+                }
+            }
+        }
+        //System.out.println("SPAWN");
+        person.setPosition(360, 3 * step);
         this.create_acid_on(0, 0, 22);
+        this.create_platform_on(0, 2 * step, 17);
+        this.create_stairs_on(step*10, 3*step, 4);
+        /*
+        this.create_acid_on(0, layer * step, 22);
+        layer+=2;
+        person.setPinchoss(this.pinchos);
+        person.setPosition(260, (layer+1) * step);
+        this.create_platform_on(0, layer * step, 17);
+        this.create_stairs_on(step, (layer+1)*step, 4);
+        this.create_stairs_on(step*10, (layer+1)*step, 4);
+        layer+=4;
+        this.create_platform_on(0, layer*step, 3);
+        this.create_stairs_on(step, (layer+1)*step, 4);
+        this.create_platform_on(8*step, layer*step, 17);
+        this.create_stairs_on(step*10, (layer+1)*step, 4);
+        layer+=4;
+        this.create_platform_on(0, layer*step, 3);
+        this.create_stairs_on(step, (layer+1)*step, 4);
+        this.create_platform_on(4*step, layer*step, 17);
+        this.create_stairs_on(step*10, (layer+1)*step, 4);
+        layer+=4;
+        this.create_platform_on(0, layer*step, 3);
+        this.create_stairs_on(step, (layer+1)*step, 4);
+        this.create_platform_on(8*step, layer*step, 17);
+        this.create_stairs_on(step*10, (layer+1)*step, 4);
+        layer+=4;
+        this.create_platform_on(0, layer*step, 3);
+        this.create_stairs_on(step, (layer+1)*step, 4);
+        this.create_platform_on(4*step, layer*step, 17);
+
+        terminator.setPosition(6*step, (layer+1)*step);
+
+        /*
         this.create_platform_on(144, 96, 19);
         this.create_platform_on(48, 288, 17);
         this.create_stairs_on(672, 144, 4);
@@ -136,11 +189,12 @@ public class MainGameScreen extends BaseScreen {
         this.create_stairs_on(336, 336, 4);
         this.create_platform_on(48, 674, 17);
         this.create_stairs_on(684, 530, 4);
+        this.create_platform_on(240, 480, 17);
+        */
+        person.setPinchoss(this.pinchos);
         stage.addActor(person);
         pinchos.add(person);
         stage.addActor(terminator);
-        person.setPinchoss(this.pinchos);
-        person.setPosition(260, 160);
         person.setTerminator(terminator);
     }
 
@@ -227,6 +281,7 @@ public class MainGameScreen extends BaseScreen {
             hideResetButton();
             hideShowGameOver();
         }
+        person.setAlive(true);
         this.checkButtons(delta);
         if (terminator.getAgrMod()) {
             newX = terminator.getX() * scale + offsetX;
