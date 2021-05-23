@@ -4,13 +4,16 @@ import com.arkadgame.game.obj.Acid;
 import com.arkadgame.game.obj.ActorPinchos;
 import com.arkadgame.game.obj.Background;
 import com.arkadgame.game.obj.Barrel;
+import com.arkadgame.game.obj.Button;
 import com.arkadgame.game.obj.CustomActor;
 import com.arkadgame.game.obj.Stairs;
 import com.arkadgame.game.obj.Terminator;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -20,6 +23,8 @@ import com.arkadgame.game.obj.Person;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+
+import org.omg.CORBA.PRIVATE_MEMBER;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -35,6 +40,7 @@ public class MainGameScreen extends BaseScreen {
         personTexture = new Texture("player_anim.png");
         terminatorTexture = new Texture("terminator.png");
         texturaPinchos = new Texture("tileset_16.png");
+        buttonTexture = new Texture(Gdx.files.internal("buttons.png"));
         regionPinchos1 = new TextureRegion(texturaPinchos, 0, 0, 16, 16);
         regionPinchos2 = new TextureRegion(texturaPinchos, 16, 0, 16, 16);
         regionPinchos3 = new TextureRegion(texturaPinchos, 32, 0, 16, 16);
@@ -43,9 +49,10 @@ public class MainGameScreen extends BaseScreen {
     }
 
     private Stage stage;
+    private SpriteBatch batch;
     private Person person;
     private Terminator terminator;
-    private Texture personTexture, texturaPinchos, menuTexture, terminatorTexture;
+    private Texture terminatorTexture, personTexture, texturaPinchos, menuTexture, buttonTexture;
     private TextureRegion regionPinchos1, regionPinchos2, regionPinchos3, regionStairs1, regionStairs2;
     private ArrayList<CustomActor> pinchos;
     private OrthographicCamera camera;
@@ -63,7 +70,10 @@ public class MainGameScreen extends BaseScreen {
     private int height = 810;
     private int cPause = 0;
     private boolean pause = false;
+    private ArrayList<Button> buttons;
     private boolean clear = true;
+    private float offset;
+    private float zoom;
 
     @Override
     public void show() {
@@ -87,6 +97,7 @@ public class MainGameScreen extends BaseScreen {
         camera.update();
         System.out.println("CreateGame");
         this.recreate();
+        createButtons();
     }
 
     public boolean isClear() {
@@ -96,6 +107,7 @@ public class MainGameScreen extends BaseScreen {
     public void recreate() {
         clear = false;
         this.pinchos = new ArrayList<>(2000);
+        batch = new SpriteBatch();
         stage = new Stage();
         stage.getViewport().setCamera(camera);
         this.scale = stage.getWidth() / height;
@@ -194,6 +206,9 @@ public class MainGameScreen extends BaseScreen {
         }
         float newY = person.getY() * scale + offsetY;
         float newX = person.getX() * scale + offsetX;
+        this.checkButtons(delta);
+        float newY = person.getY() * scale;
+        float newX = person.getX() * scale;
         if (newX < minX) {
             newX = minX;
         } else if (newX > maxX) {
@@ -202,7 +217,6 @@ public class MainGameScreen extends BaseScreen {
         if (newY < minY) {
             newY = minY;
         }
-        offsetTime += delta;
         camera.position.lerp(new Vector3(newX, newY, 0f), 0.1f);
         camera.update();
         camera.combined.scl(scale);
@@ -214,10 +228,69 @@ public class MainGameScreen extends BaseScreen {
             i.draw(stage.getBatch(), 0);
         }
         stage.getBatch().end();
+        batch.begin();
+        for (Button butt: buttons) {
+            butt.draw(batch, 1f);
+        }
+        batch.end();
     }
 
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, false);
+        this.width = width;
+        this.height = height;
+        this.offset = height * 0.03f;
+        batch.getProjectionMatrix().setToOrtho2D(0, 0, this.width, this.height);
+        zoom = height/200f;
+        createButtons();
+    }
+
+    private void createButtons() {
+        buttons = new ArrayList<>(10);
+        Button button;
+        button = new Button(buttonTexture, 32, 32, 0, 0, zoom, true);
+        button.setType("LeftButton");
+        button.setPosition(offset, offset);
+        buttons.add(button);
+        button = new Button(buttonTexture, 32, 32, 64, 0, zoom, true);
+        button.setType("RightButton");
+        button.setPosition(offset*2 + button.getWidth(), offset);
+        buttons.add(button);
+        button = new Button(buttonTexture, 32, 32, 0, 32, zoom, true);
+        button.setType("UpButton");
+        System.out.println(height - offset + " " + height);
+        button.setPosition(width - offset - button.getWidth(), offset * 2 + button.getHeight());
+        buttons.add(button);
+        button = new Button(buttonTexture, 32, 32, 64, 32, zoom, true);
+        button.setType("DownButton");
+        button.setPosition(width- offset - button.getWidth(), offset);
+        buttons.add(button);
+    }
+
+    private void checkButtons(float time) {
+        person.setA(false);
+        person.setD(false);
+        person.setS(false);
+        person.setW(false);
+        for (int i = 0; i < 2; i++) {
+            float x = Gdx.input.getX(i);
+            float y = height - Gdx.input.getY(i);
+            boolean press = Gdx.input.isTouched(i);
+            for (Button butt : buttons) {
+                if (butt.checkCollision(x, y) && press && butt.getType().equalsIgnoreCase("LeftButton") || process.getA()) {
+                    person.setA(true);
+                }
+                if (butt.checkCollision(x, y) && press && butt.getType().equalsIgnoreCase("RightButton") || process.getD()) {
+                    person.setD(true);
+                }
+                if (butt.checkCollision(x, y) && press && butt.getType().equalsIgnoreCase("UpButton") || process.getW() || process.getSpace()) {
+                    person.setW(true);
+                }
+                if (butt.checkCollision(x, y) && press && butt.getType().equalsIgnoreCase("DownButton") || process.getS() || process.getCtrl()) {
+                    person.setS(true);
+                }
+            }
+        }
     }
 
     public void createOffset(int x, int y) {

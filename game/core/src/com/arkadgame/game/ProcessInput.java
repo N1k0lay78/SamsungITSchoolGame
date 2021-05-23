@@ -44,7 +44,6 @@ public class ProcessInput extends InputAdapter {
         if (button == Input.Keys.CONTROL_LEFT) {Ctrl = false;}
         return false;
     }
-
     public boolean getW() {
         return W;
     }

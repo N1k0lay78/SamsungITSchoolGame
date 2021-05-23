@@ -10,6 +10,6 @@ public class DesktopLauncher {
 		cfg.title = "CyberKong";
 		cfg.height = 480;
 		cfg.width = 720;
-		new LwjglApplication(new ArkadGame(), cfg);
+		new LwjglApplication(new ArkadGame(0.5f), cfg);
 	}
 }

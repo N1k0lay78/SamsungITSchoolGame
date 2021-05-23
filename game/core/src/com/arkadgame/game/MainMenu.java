@@ -60,7 +60,7 @@ public class MainMenu extends BaseScreen {
         // пересоздаём кнопки при открытии или ресайзе
         movingButton = 0;
         zoom = height / 200f;
-        System.out.println(zoom);
+        //System.out.println(zoom);
         buttons = new ArrayList<>(4);
         Button button; // Button(buttonTexture, sizeX, sizeY, x, y, zoom, true);
         button = new Button(buttonTexture, 133, 32, 128, 0, zoom, true);
@@ -68,7 +68,7 @@ public class MainMenu extends BaseScreen {
         button.setPosition(-button.getWidth(),height - this.offset - 32 * zoom);
         buttons.add(button);
         button = new Button(buttonTexture, 196, 32, 272, 0, zoom, true);
-        button.setType("SettingButton");
+        button.setType("SettingsButton");
         button.setPosition(-button.getWidth(),height - height * 0.2f - 2 * 32 * zoom);
         buttons.add(button);
         button = new Button(buttonTexture, 118, 32, 480, 0, zoom, true);
@@ -89,6 +89,7 @@ public class MainMenu extends BaseScreen {
         if (movingButton < buttons.size()) {
             buttons.get(movingButton).setX(buttons.get(movingButton).getX() + delta * speed * zoom);
             if (buttons.get(movingButton).getX() >= this.offset) {
+                buttons.get(movingButton).setX(this.offset); // о - оптимизация
                 movingButton++;
                 if (test) {
                     if (movingButton > buttons.size() - 1) {
@@ -115,7 +116,7 @@ public class MainMenu extends BaseScreen {
         batch.draw(menuTexture, 0, 0, width, height);
         for (int i=0; i < buttons.size(); i++) {
             if (i < movingButton) {
-                buttons.get(i).setX(this.offset);
+                // немного оптимизации
                 buttons.get(i).draw(batch, 1f);
             } else if (i == movingButton) {
                 buttons.get(i).draw(batch, (buttons.get(movingButton).getX() + buttons.get(i).getWidth())/(buttons.get(i).getWidth() + this.offset));

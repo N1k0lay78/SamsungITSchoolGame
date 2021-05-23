@@ -3,6 +3,8 @@ package com.arkadgame.game;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Sound;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,28 +21,43 @@ public class ArkadGame extends Game {
 	private MainGameScreen mainGameScreen;
 	private MainMenu mainMenu;
 	private OpenGameScreen openGameScreen;
+	private SettingsScreen settingsScreen;
+	private Sound sound;
+	private float volume;
+	private long bgMusicID;
+	private AssetManager assetManager;
 
-	public ArkadGame() {
+	public ArkadGame(float volume) {
+		this.volume = volume;
 	}
 	private String currentScene;
 	private ProcessInput process;
 
 	@Override
 	public void create () {
-		connectSocket();
-		configSocketEvents();
+		assetManager = new AssetManager();
+		assetManager.load("main menu (1).mp3", Sound.class);
+		assetManager.finishLoading(); //Important!
+		System.out.println("ISLOADED"+assetManager.isLoaded(Gdx.files.internal("main menu (1).mp3").toString()));
+		sound = assetManager.get("main menu (1).mp3", Sound.class);
+		//connectSocket();
+		//configSocketEvents();
 		process = new ProcessInput();
+		Gdx.input.vibrate(10000);
 		mainMenu = new MainMenu(this, process, 700f);
 		mainGameScreen = new MainGameScreen(this, process, socket);
+		settingsScreen = new SettingsScreen(this, process, 0.5f);
+		bgMusicID = sound.play(1f);
+		sound.setLooping(bgMusicID, true);
+		sound.setVolume(bgMusicID, volume);
 		setScreen(mainMenu);
 		currentScene = "OpenGameScreen";
 		//connectSocket();
 		//configSocketEvents();
-		this.process = new ProcessInput();
 		Gdx.input.setInputProcessor(this.process);
 
 		mainGameScreen = new MainGameScreen(this, process, socket);
-		openGameScreen = new OpenGameScreen(this, process, 1f, 1f); // будет показываться deltaSpeed * 4 + waitTime * 2 секунд
+		openGameScreen = new OpenGameScreen(this, process, 1f, 2.5f); // будет показываться deltaSpeed * 3 + waitTime * 2 секунд
 		setScreen(openGameScreen);
 	}
 
@@ -48,6 +65,14 @@ public class ArkadGame extends Game {
 		if ((process.getEsc()&&currentScene.equals("Level1"))||isScreensaverOver) {
 			isScreensaverOver = false;
 			currentScene = "MainMenu";
+			setScreen(mainMenu);
+		}
+		if (mainMenu.getCurrButton().equalsIgnoreCase("settingsButton")) {
+			mainMenu.clearAction();
+			setScreen(settingsScreen);
+		}
+		if (settingsScreen.getCurrButton().equalsIgnoreCase("ReadyButton")) {
+			settingsScreen.clearAction();
 			setScreen(mainMenu);
 		}
 		if (mainMenu.getCurrButton().equalsIgnoreCase("ExitButton")) {
@@ -120,6 +145,11 @@ public class ArkadGame extends Game {
 				}
 			}
 		});
+	}
+
+	public void setVolume(float vol) {
+		volume = vol;
+		sound.setVolume(bgMusicID, vol);
 	}
 
 	public boolean isScreensaverOver() {
