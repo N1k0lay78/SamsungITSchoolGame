@@ -60,6 +60,7 @@ public class SettingsScreen extends BaseScreen {
         ready.setType("ReadyButton");
         step += ready.getHeight();
         ready.setPosition(width/2-ready.getWidth()/2, height - 4*offset - step);
+        volume.set(game.getVolume());
     }
 
     public void render(float delta) {
