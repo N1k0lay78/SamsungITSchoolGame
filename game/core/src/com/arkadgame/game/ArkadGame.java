@@ -22,9 +22,11 @@ public class ArkadGame extends Game {
 	private OpenGameScreen openGameScreen;
 	private SettingsScreen settingsScreen;
 	private Sound sound;
+	private float volume;
 	private long bgMusicID;
 
-	public ArkadGame() {
+	public ArkadGame(float volume) {
+		this.volume = volume;
 	}
 	private String currentScene;
 	private ProcessInput process;
@@ -40,6 +42,7 @@ public class ArkadGame extends Game {
 		settingsScreen = new SettingsScreen(this, process, 0.5f);
 		bgMusicID = sound.play();
 		sound.setLooping(bgMusicID, true);
+		sound.setVolume(bgMusicID, volume);
 		setScreen(mainMenu);
 		currentScene = "OpenGameScreen";
 		//connectSocket();
@@ -139,6 +142,7 @@ public class ArkadGame extends Game {
 	}
 
 	public void setVolume(float vol) {
+		volume = vol;
 		sound.setVolume(bgMusicID, vol);
 	}
 
