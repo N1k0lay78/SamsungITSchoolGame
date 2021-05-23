@@ -18,6 +18,7 @@ public class Person extends CustomActor {
     private Texture personTexture;
     private ArrayList<CustomActor> pinchoss;
     private TextureRegion personRegion;
+    private Terminator terminator;
     private float gravity = 1000f;
     private float jumpForce = 250f;
     private float runAnim = 0f;
@@ -60,6 +61,11 @@ public class Person extends CustomActor {
     public void setA(boolean n) {
         A = n;
     }
+
+    public void setTerminator(Terminator terminator) {
+        this.terminator = terminator;
+    }
+
     public void update(ProcessInput process, float time) {
         float m_s = 0f;
         boolean move = false, l = false, r = false;
@@ -116,6 +122,7 @@ public class Person extends CustomActor {
             }
         } else {
             this.updateTextureDie(time);
+
         }
     }
 
@@ -373,7 +380,9 @@ public class Person extends CustomActor {
             }
         }
         if (onStair) {
-            onStairs = true;
+            if (!terminator.getAgrMod()) {
+                onStairs = true;
+            }
             res = false;
             readyToJump = false;
         } else {
