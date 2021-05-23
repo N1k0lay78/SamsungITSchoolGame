@@ -45,31 +45,39 @@ public class SettingsScreen extends BaseScreen {
 
     public void show() {
         // создаём интерфейс
-        System.out.println("SEttings Open");
-        zoom = 1f;
-        nameText = new Text(buttonTexture, 0, 128, 187, 32, zoom);
-        nameText.setPosition(100, 100);
-        volumeText = new Text(buttonTexture, 187, 128, 184, 32, zoom);
-        nameText.setPosition(100, 200);
-        volume = new Slider(buttonTexture, 0, 0, zoom);
+        zoom = height / 200f;
+        nameText = new Text(buttonTexture, 187, 128, 184, 32, zoom*2/3);
+        float step = nameText.getHeight();
+        nameText.setPosition(width/2-nameText.getWidth()/2, height - offset - step);
+        volumeText = new Text(buttonTexture, 0, 128, 187, 32, zoom/2);
+        step += volumeText.getHeight();
+        volumeText.setPosition(width/2-volumeText.getWidth()/2, height - 2*offset - step);
+        volume = new Slider(buttonTexture, 0, 0, zoom, 0.5f);
+        step += volume.getHeight();
+        volume.setPosition(width/2-volume.getWidth()/2, height - 3*offset - step);
         volume.setType("VolumeSlider");
-        ready = new Button(buttonTexture, 126, 32, 327, 128, zoom, false);
+        ready = new Button(buttonTexture, 126, 32, 371, 128, zoom/2, false);
         ready.setType("ReadyButton");
-        ready.setPosition(100, 300);
+        step += ready.getHeight();
+        ready.setPosition(width/2-ready.getWidth()/2, height - 4*offset - step);
     }
 
     public void render(float delta) {
         // анимация
         // обновление
+        float firstX = Gdx.input.getX();
+        float firstY = height - Gdx.input.getY();
+        boolean leftPressed = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
+        checkButtonPress(firstX, firstY, leftPressed);
         // в режиме отладки
         if (test) {
-            System.out.println("render");
+            //System.out.println("render");
         }
         // перекладывание бардьров
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         // отрисовка
         batch.begin();
-        //batch.draw(background, 0, 0, width, height);
+        batch.draw(background, 0, 0, width, height);
         // отрисовка UI
         nameText.draw(batch, 1f);
         volumeText.draw(batch, 1f);
@@ -82,6 +90,7 @@ public class SettingsScreen extends BaseScreen {
         // получаем размер экрана
         this.width = width;
         this.height = height;
+        System.out.println(width + " " + height);
         this.offset = height * 0.1f;
         batch.getProjectionMatrix().setToOrtho2D(0, 0, this.width, this.height);
         show();
@@ -90,6 +99,12 @@ public class SettingsScreen extends BaseScreen {
     private void checkButtonPress(float x, float y, boolean press) {
         currButton = "None";
         // обновление UI
+        if (volume.checkCollision(x, y, press)&&press) {
+            game.setVolume(volume.getVolume());
+        }
+        if (ready.checkCollision(x, y)&&press) {
+            currButton = ready.getType();
+        }
     }
 
     @Override

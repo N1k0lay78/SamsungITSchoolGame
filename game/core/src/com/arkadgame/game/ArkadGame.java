@@ -3,6 +3,7 @@ package com.arkadgame.game;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,6 +21,8 @@ public class ArkadGame extends Game {
 	private MainMenu mainMenu;
 	private OpenGameScreen openGameScreen;
 	private SettingsScreen settingsScreen;
+	private Sound sound;
+	private long bgMusicID;
 
 	public ArkadGame() {
 	}
@@ -28,12 +31,15 @@ public class ArkadGame extends Game {
 
 	@Override
 	public void create () {
-		connectSocket();
-		configSocketEvents();
+		sound = Gdx.audio.newSound(Gdx.files.internal("main menu.mp3"));
+		//connectSocket();
+		//configSocketEvents();
 		process = new ProcessInput();
 		mainMenu = new MainMenu(this, process, 700f);
 		mainGameScreen = new MainGameScreen(this, process, socket);
 		settingsScreen = new SettingsScreen(this, process, 0.5f);
+		bgMusicID = sound.play();
+		sound.setLooping(bgMusicID, true);
 		setScreen(mainMenu);
 		currentScene = "OpenGameScreen";
 		//connectSocket();
@@ -42,7 +48,7 @@ public class ArkadGame extends Game {
 		Gdx.input.setInputProcessor(this.process);
 
 		mainGameScreen = new MainGameScreen(this, process, socket);
-		openGameScreen = new OpenGameScreen(this, process, 1f, 1f); // будет показываться deltaSpeed * 4 + waitTime * 2 секунд
+		openGameScreen = new OpenGameScreen(this, process, 1f, 2.5f); // будет показываться deltaSpeed * 3 + waitTime * 2 секунд
 		setScreen(openGameScreen);
 	}
 
@@ -55,6 +61,10 @@ public class ArkadGame extends Game {
 		if (mainMenu.getCurrButton().equalsIgnoreCase("settingsButton")) {
 			mainMenu.clearAction();
 			setScreen(settingsScreen);
+		}
+		if (settingsScreen.getCurrButton().equalsIgnoreCase("ReadyButton")) {
+			settingsScreen.clearAction();
+			setScreen(mainMenu);
 		}
 		if (mainMenu.getCurrButton().equalsIgnoreCase("ExitButton")) {
 			Gdx.app.exit();
@@ -126,6 +136,10 @@ public class ArkadGame extends Game {
 				}
 			}
 		});
+	}
+
+	public void setVolume(float vol) {
+		sound.setVolume(bgMusicID, vol);
 	}
 
 	public boolean isScreensaverOver() {

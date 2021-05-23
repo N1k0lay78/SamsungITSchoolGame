@@ -35,8 +35,8 @@ public class Button extends CustomActor {
     public float getWidth() {return  sizeX * zoom;}
 
     public boolean checkCollision(float x, float y) {
-        if (this.getX() < x&& x < this.getX() + this.getSizeX() * zoom&&
-                this.getY() < y&& y < this.getY() + this.getSizeY() * zoom) {
+        if (this.getX() <= x&& x <= this.getX() + this.getSizeX() * zoom&&
+                this.getY() <= y&& y <= this.getY() + this.getSizeY() * zoom) {
             this.setActive(true);
             return true;
         }
