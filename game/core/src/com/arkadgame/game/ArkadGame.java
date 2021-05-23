@@ -19,6 +19,7 @@ public class ArkadGame extends Game {
 	private MainGameScreen mainGameScreen;
 	private MainMenu mainMenu;
 	private OpenGameScreen openGameScreen;
+	private SettingsScreen settingsScreen;
 
 	public ArkadGame() {
 	}
@@ -32,6 +33,7 @@ public class ArkadGame extends Game {
 		process = new ProcessInput();
 		mainMenu = new MainMenu(this, process, 700f);
 		mainGameScreen = new MainGameScreen(this, process, socket);
+		settingsScreen = new SettingsScreen(this, process, 0.5f);
 		setScreen(mainMenu);
 		currentScene = "OpenGameScreen";
 		//connectSocket();
@@ -49,6 +51,10 @@ public class ArkadGame extends Game {
 			isScreensaverOver = false;
 			currentScene = "MainMenu";
 			setScreen(mainMenu);
+		}
+		if (mainMenu.getCurrButton().equalsIgnoreCase("settingsButton")) {
+			mainMenu.clearAction();
+			setScreen(settingsScreen);
 		}
 		if (mainMenu.getCurrButton().equalsIgnoreCase("ExitButton")) {
 			Gdx.app.exit();

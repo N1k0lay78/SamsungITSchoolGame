@@ -11,18 +11,18 @@ public class Slider extends CustomActor {
     private TextureRegion hand;
     // кнопка активна
     private boolean active = false;
-    // положение
-    private float x;
-    private float y;
     private float zoom; // для скейла
     // значение от 0 до 1
     private float value;
 
     public Slider(Texture buttonTexture, float x, float y, float zoom) {
-        this.x = x;
-        this.y = y;
+        this.setPosition(x, y);
         this.buttonTexture = buttonTexture;
         this.zoom = zoom;
+        this.buttonTexture = buttonTexture;
+        this.filledLine = new TextureRegion(buttonTexture,0, 96, 240, 16);
+        this.emptyLine = new TextureRegion(buttonTexture,0, 112, 240, 16);
+        this.hand = new TextureRegion(buttonTexture, 432, 64, 16, 16);
 
         //this.setSize(sizeX * zoom, sizeY * zoom);
         //buttonRegion = new TextureRegion(buttonTexture, _x, _y, sizeX, sizeY);
@@ -43,7 +43,14 @@ public class Slider extends CustomActor {
         changeTexture();
     }
 
-    private void changeTexture() {}
+    private void changeTexture() {
+        if (active) {
+            this.hand = new TextureRegion(buttonTexture, 432, 80, 16, 16);
+        } else {
+            this.hand = new TextureRegion(buttonTexture, 432, 64, 16, 16);
+
+        }
+    }
 
     public float getSizeX() {return 256 * zoom;}
     public float getSizeY() {return 16 * zoom;}
