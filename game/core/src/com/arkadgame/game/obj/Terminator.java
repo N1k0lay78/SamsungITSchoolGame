@@ -6,18 +6,23 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.bullet.collision._btMprSupport_t;
 
+import java.util.Random;
+
 public class Terminator extends CustomActor {
 
     private Texture terminatorTexture;
     private TextureRegion terminatorRegion;
     private MainGameScreen mainGameScreen;
     private Person person;
+    private Random random = new java.util.Random();
     private String type = "Terminator";
     private float throwDelayTime = 1.25f;
+    private float THROWDELAYTIME = 1.25f;
     private float curTime = 0f;
     private float idleTime = 0f;
     private float throwTime = 0f;
     private float agrTime = 0f;
+    private int lenAgrAnim = 4;
     private int sizeX = 96;
     private int sizeY = 128;
     private int frameThrow = 0;
@@ -43,7 +48,7 @@ public class Terminator extends CustomActor {
     }
 
     public boolean getAgrMod() {
-        return agrMod&&(this.agrAnim<2);
+        return agrMod&&(this.agrAnim<lenAgrAnim);
     }
 
     public void setAlive(boolean alive) {
@@ -93,6 +98,7 @@ public class Terminator extends CustomActor {
             if (frameThrow < 25) {
                 frameThrow++;
             } else {
+                throwDelayTime = THROWDELAYTIME * random.nextFloat() + 0.5f;
                 frameThrow = 0;
                 isThrow = false;
                 throwDelay = true;
@@ -110,10 +116,10 @@ public class Terminator extends CustomActor {
         if (!agrMod) {
             if (this.getY() - person.getY() < 200) {
                 agrMod = true;
-                throwDelayTime /= 2;
+                THROWDELAYTIME /= 2;
             }
         } else {
-            if (agrAnim < 2) {
+            if (agrAnim < lenAgrAnim) {
                 updateAgrTexture(time);
             } else {
                 can = true;

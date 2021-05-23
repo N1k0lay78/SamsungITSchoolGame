@@ -19,6 +19,7 @@ public class Barrel extends CustomActor {
     private Person person;
     private Terminator terminator;
     private Random random = new java.util.Random();
+    private String type = "Barrel";
     private float gravity = 1700;
     private float angle = 1;
     private float speedRotation = -525f;
@@ -34,6 +35,7 @@ public class Barrel extends CustomActor {
     private int stairsFrame = 0;
     private int sizeX = 40;
     private int sizeY = 40;
+    private boolean land = false;
     private boolean onStairs = false;
     private boolean onHand = true;
     private boolean firstLand = true;
@@ -70,6 +72,10 @@ public class Barrel extends CustomActor {
 
     public void move() {
         time = Gdx.graphics.getDeltaTime();
+        if (terminator.getAgrMod()) {
+            this.remove();
+            this.type = "Remove";
+        }
         if (!onHand) {
             if (onStairs) {
                 this.move_up(-255 * time);
@@ -89,6 +95,7 @@ public class Barrel extends CustomActor {
             // this.setPosition(sx, sy); this.xSpeed = -225f; speedRotation = 525f; this.ySpeed = 0f;
             if (this.getY() < -this.getHeight()) {
                 this.remove();
+                this.type = "Remove";
             }
         } else {
             this.setY(this.getY() + 8);
@@ -105,15 +112,21 @@ public class Barrel extends CustomActor {
             if (checkCollisions()) {
                 this.setY(this.getY() - speed);
                 if (this.ySpeed < -7f) {
-                    if (!firstLand) {
+                    terminator.getMainGameScreen().createOffset(10, 50);
+                    if (!firstLand&&!land) {
+                        land = true;
                         xSpeed *= -1;
                         speedRotation *= -1;
                     } else {
-                        terminator.getMainGameScreen().createOffset(10, 50);
                         firstLand = false;
                     }
                 }
-                ySpeed = 0f;
+                if (Math.abs(this.ySpeed) * 0.4f > 1) {
+                    this.ySpeed = -ySpeed * 0.4f;
+                } else {
+                    this.ySpeed = 0f;
+                    land = false;
+                }
             }
         }
     }
@@ -129,7 +142,7 @@ public class Barrel extends CustomActor {
     }
 
     public String getType() {
-        return "Barrel";
+        return type;
     }
 
     @Override
