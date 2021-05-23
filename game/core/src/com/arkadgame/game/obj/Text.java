@@ -36,7 +36,6 @@ public class Text extends CustomActor {
         if (textTime > 1) {
             textTime = 0f;
             if (frame > 0) {frame = 0;} else {frame++;}
-            System.out.println(frame);
             this.TextRegion = new TextureRegion(texture, regionX + frame * sizeX, regionY, sizeX, sizeY);
         }
     }
