@@ -70,18 +70,20 @@ public class MainGameScreen extends BaseScreen {
     private float scale = 1;
     private float newX = 0;
     private float newY = 0;
+    private float offset;
+    private float zoom;
+    private final int WIDTH = 1440;
+    private final int HEIGHT = 810;
     private int speed = 2;
     private int width = 1440;
     private int height = 810;
-    private final int WIDTH = 1440;
-    private final int HEIGHT = 810;
     private int cPause = 0;
     private boolean showResetButtonBool;
     private boolean showGameOverBool;
     private boolean pause = false;
     private boolean clear = true;
-    private float offset;
-    private float zoom;
+    private boolean agrMusic = false;
+
 
     @Override
     public void show() {
@@ -109,6 +111,8 @@ public class MainGameScreen extends BaseScreen {
         } else if (c_x > maxY) {
             c_y = maxY;
         }
+        game.setMusic(1);
+        agrMusic = false;
         camera.position.set(c_x, c_y, 0f);
         camera.update();
         System.out.println("CreateGame");
@@ -202,14 +206,19 @@ public class MainGameScreen extends BaseScreen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0.4f, 0.5f, 0.8f, 1f);
         stage.act();
-        if (terminator.getAgrMod() && offsetTime > 0.1) {
-            offsetTime = 0;
-            this.createOffset(125, 125);
-        } else {
-            if (offsetTime > 0.1) {
-                offsetX = 0;
-                offsetY = 0;
+        if (terminator.getAgrMod()) {
+            if (!agrMusic) {
+                agrMusic = true;
+                game.setMusic(2);
             }
+             if (offsetTime > 0.1) {
+                 offsetTime = 0;
+                 this.createOffset(125, 125);
+             }
+        }
+        if (offsetTime > 0.1) {
+            offsetX = 0;
+            offsetY = 0;
         }
         if (!person.isAlive()) {
             showResetButton();

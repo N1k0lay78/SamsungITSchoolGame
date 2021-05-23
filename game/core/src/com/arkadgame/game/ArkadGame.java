@@ -27,7 +27,7 @@ public class ArkadGame extends Game {
 	private Sound sound;
 	private Sound music_1;
 	private Sound music_2;
-	private int musicNum;
+	private int musicNum = -1;
 	private float volume;
 	private long bgMusicID;
 	private AssetManager assetManager;
@@ -50,12 +50,12 @@ public class ArkadGame extends Game {
 		assetManager.load("music_2.mp3", Sound.class);
 		assetManager.load("music_3.mp3", Sound.class);
 		assetManager.finishLoading(); //Important!
-		System.out.println("ISLOADED"+assetManager.isLoaded(Gdx.files.internal("main menu (1).mp3").toString()));
+		System.out.println("ISLOADED "+assetManager.isLoaded(Gdx.files.internal("main menu (1).mp3").toString()));
 		sound = assetManager.get("main menu (1).mp3", Sound.class);
 		//connectSocket();
 		//configSocketEvents();
 		process = new ProcessInput();
-		Gdx.input.vibrate(10000);
+		// Gdx.input.vibrate(10000);
 		mainMenu = new MainMenu(this, process, 700f);
 		mainGameScreen = new MainGameScreen(this, process, socket);
 		settingsScreen = new SettingsScreen(this, process, 0.5f);
@@ -69,31 +69,33 @@ public class ArkadGame extends Game {
 	}
 
 	public void setMusic(int num) {
-		if (num == 0) {
-			bgMusicID = sound.play(volume);
-			sound.setLooping(bgMusicID, true);
-		} else if (sound != null) {
-			sound.stop();
-		}
-		if (num == 1) {
-			if (music_1 == null) {
-				music_1 = assetManager.get("music_2.mp3", Sound.class);
+		if (num != musicNum) {
+			if (num == 0) {
+				bgMusicID = sound.play(volume);
+				sound.setLooping(bgMusicID, true);
+			} else if (sound != null) {
+				sound.stop();
 			}
-			bgMusicID = music_1.play(volume);
-			music_1.setLooping(bgMusicID, true);
-		} else if (music_1 != null) {
-			music_1.stop();
-		}
-		if (num == 2) {
-			if (music_2 == null) {
-				music_2 = assetManager.get("music_3.mp3", Sound.class);
+			if (num == 1) {
+				if (music_1 == null) {
+					music_1 = assetManager.get("music_2.mp3", Sound.class);
+				}
+				bgMusicID = music_1.play(volume);
+				music_1.setLooping(bgMusicID, true);
+			} else if (music_1 != null) {
+				music_1.stop();
 			}
-			bgMusicID = music_2.play(volume);
-			music_2.setLooping(bgMusicID, true);
-		} else if (music_2 != null) {
-			music_2.stop();
+			if (num == 2) {
+				if (music_2 == null) {
+					music_2 = assetManager.get("music_3.mp3", Sound.class);
+				}
+				bgMusicID = music_2.play(volume);
+				music_2.setLooping(bgMusicID, true);
+			} else if (music_2 != null) {
+				music_2.stop();
+			}
+			musicNum = num;
 		}
-		musicNum = num;
 	}
 
 	public void setVolume(float vol) {

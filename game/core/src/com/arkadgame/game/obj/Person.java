@@ -345,7 +345,7 @@ public class Person extends CustomActor {
                     (pinchos.getY() + pinchos.getHeight() > this.getHeight() + this.getY() || pinchos.getY() + pinchos.getHeight() > this.getY())) {
                 y_col = true;
             }
-            if (x_col && y_col && !pinchos.getType().equalsIgnoreCase("Person")&&!pinchos.getType().equalsIgnoreCase("BaseStairs")) {
+            if (x_col && y_col && !pinchos.getType().equalsIgnoreCase("Person")&&!pinchos.getType().equalsIgnoreCase("BaseStairs")&&!pinchos.getType().equalsIgnoreCase("DestroyBarrel")) {
                 if (pinchos.getType().equalsIgnoreCase("Barrel")||pinchos.getType().equalsIgnoreCase("Acid")) {
                     this.setAlive(false);
                     return true;

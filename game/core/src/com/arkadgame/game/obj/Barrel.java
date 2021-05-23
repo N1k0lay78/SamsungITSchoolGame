@@ -78,6 +78,7 @@ public class Barrel extends CustomActor {
         time = Gdx.graphics.getDeltaTime();
         if (terminator.getAgrMod()) {
             this.isAlive = false;
+            this.type = "DestroyBarrel";
         }
         if (!isAlive) {
             if (!this.checkCollisions() && !onStairs) {
@@ -117,6 +118,10 @@ public class Barrel extends CustomActor {
                 }
             }
         }
+    }
+
+    public boolean getAlive() {
+        return isAlive;
     }
 
     public void move_up(float speed) {
@@ -211,12 +216,12 @@ public class Barrel extends CustomActor {
                         }
                     }
                 }
-                if (pinchos.getType().equalsIgnoreCase("Person")) {
+                if (pinchos.getType().equalsIgnoreCase("Person")&&this.isAlive) {
                     person.setAlive(false);
                 }
                 if (!(pinchos.getType().equalsIgnoreCase("Stairs") || pinchos.getType().equalsIgnoreCase("Barrel") ||
                         pinchos.getType().equalsIgnoreCase("Person") || pinchos.getType().equalsIgnoreCase("BaseStairs") ||
-                        pinchos.getType().equalsIgnoreCase("Terminator"))) {
+                        pinchos.getType().equalsIgnoreCase("Terminator")||pinchos.getType().equalsIgnoreCase("DestroyBarrel"))) {
                     res = true;
                 }
             }
