@@ -3,6 +3,7 @@ package com.arkadgame.game;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 
 import org.json.JSONArray;
@@ -24,6 +25,7 @@ public class ArkadGame extends Game {
 	private Sound sound;
 	private float volume;
 	private long bgMusicID;
+	private AssetManager assetManager;
 
 	public ArkadGame(float volume) {
 		this.volume = volume;
@@ -33,21 +35,25 @@ public class ArkadGame extends Game {
 
 	@Override
 	public void create () {
-		sound = Gdx.audio.newSound(Gdx.files.internal("main menu.mp3"));
+		assetManager = new AssetManager();
+		assetManager.load("main menu (1).mp3", Sound.class);
+		assetManager.finishLoading(); //Important!
+		System.out.println("ISLOADED"+assetManager.isLoaded(Gdx.files.internal("main menu (1).mp3").toString()));
+		sound = assetManager.get("main menu (1).mp3", Sound.class);
 		//connectSocket();
 		//configSocketEvents();
 		process = new ProcessInput();
+		Gdx.input.vibrate(10000);
 		mainMenu = new MainMenu(this, process, 700f);
 		mainGameScreen = new MainGameScreen(this, process, socket);
 		settingsScreen = new SettingsScreen(this, process, 0.5f);
-		bgMusicID = sound.play();
+		bgMusicID = sound.play(1f);
 		sound.setLooping(bgMusicID, true);
 		sound.setVolume(bgMusicID, volume);
 		setScreen(mainMenu);
 		currentScene = "OpenGameScreen";
 		//connectSocket();
 		//configSocketEvents();
-		this.process = new ProcessInput();
 		Gdx.input.setInputProcessor(this.process);
 
 		mainGameScreen = new MainGameScreen(this, process, socket);

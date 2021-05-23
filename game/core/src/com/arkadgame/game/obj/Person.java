@@ -1,6 +1,7 @@
 package com.arkadgame.game.obj;
 
 import com.arkadgame.game.ProcessInput;
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -17,14 +18,6 @@ public class Person extends CustomActor {
     private Texture personTexture;
     private ArrayList<CustomActor> pinchoss;
     private TextureRegion personRegion;
-    private int fallingFrame = 0;
-    private int runningFrame = 0;
-    private int standingFrame = 0;
-    private int climbingFrame = 0;
-    private int dieingFrame = 0;
-    private int sizeX = 48;
-    private int sizeY = 72;
-    private int speed = 140;
     private float gravity = 1000f;
     private float jumpForce = 250f;
     private float runAnim = 0f;
@@ -36,6 +29,18 @@ public class Person extends CustomActor {
     private float xSpeed = 0f;
     private float ySpeed = 0f;
     private float dieTime = 0f;
+    private int fallingFrame = 0;
+    private int runningFrame = 0;
+    private int standingFrame = 0;
+    private int climbingFrame = 0;
+    private int dieingFrame = 0;
+    private int sizeX = 48;
+    private int sizeY = 72;
+    private int speed = 140;
+    private boolean W = false;
+    private boolean S = false;
+    private boolean A = false;
+    private boolean D = false;
     private boolean moveDown = false;
     private boolean isLeft = false;
     private boolean alive;
@@ -43,19 +48,35 @@ public class Person extends CustomActor {
     private boolean onStairs = false;
     private boolean readyToJump = true;
 
+    public void setW(boolean n) {
+        W = n;
+    }
+    public void setS(boolean n) {
+        S = n;
+    }
+    public void setD(boolean n) {
+        D = n;
+    }
+    public void setA(boolean n) {
+        A = n;
+    }
     public void update(ProcessInput process, float time) {
         float m_s = 0f;
         boolean move = false, l = false, r = false;
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         this.gravity(time);
         if (this.isAlive()) {
-            if (process.getShift()) {
-                this.speed = 260;
+            if (Gdx.app.getType() == Application.ApplicationType.Desktop) {
+                if (process.getShift()) {
+                    this.speed = 260;
+                } else {
+                    this.speed = 140;
+                }
             } else {
-                this.speed = 140;
+                this.speed = 260;
             }
             float local_speed = this.speed * time;
-            if (process.getW() || process.getSpace()) {
+            if (W) {
                 m_s = local_speed;
                 if (!this.getOnStairs()) {
                     this.jump(time);
@@ -63,21 +84,21 @@ public class Person extends CustomActor {
                     this.move_up(local_speed);
                 }
             }
-            if ((process.getS() || process.getCtrl()) && this.getOnStairs()) {
+            if ((S) && this.getOnStairs()) {
                 this.move_down(local_speed);
             }
-            if (process.getS() || process.getCtrl()) {
+            if (S) {
                 m_s = -local_speed;
                 this.setMoveDown(true);
             } else {
                 this.setMoveDown(false);
             }
-            if (process.getA()) {
+            if (A) {
                 this.move_left(local_speed);
                 move = true;
                 l = true;
             }
-            if (process.getD()) {
+            if (D) {
                 this.move_right(local_speed);
                 move = true;
                 r = true;
@@ -256,6 +277,10 @@ public class Person extends CustomActor {
             }
             setSize(sizeX, sizeY);
         }
+    }
+
+    public int getSpeed() {
+        return speed;
     }
 
     public void move_left(float speed) {
