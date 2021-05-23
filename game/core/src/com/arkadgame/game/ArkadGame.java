@@ -2,6 +2,7 @@ package com.arkadgame.game;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
@@ -26,10 +27,15 @@ public class ArkadGame extends Game {
 	private float volume;
 	private long bgMusicID;
 	private AssetManager assetManager;
+	private Preferences prefs;
 
-	public ArkadGame(float volume) {
-		this.volume = volume;
+	public ArkadGame() {
+		// Preferences prefs = Gdx.app.getPreferences("arkad-game");
+		// volume = prefs.getFloat("volume");
+		volume = 1f;
+		// System.out.println("LOAD "+volume);
 	}
+
 	private String currentScene;
 	private ProcessInput process;
 
@@ -88,23 +94,6 @@ public class ArkadGame extends Game {
 
 	public void recreateLevel() {this.mainGameScreen.recreate();}
 
-	public void connectSocket() {
-		try {
-			socket = IO.socket("http://localhost:8000");
-			socket.connect();
-			JSONObject obj = new JSONObject();
-			JSONObject data = new JSONObject();
-			obj.put("event", "spawn");
-			data.put("x", 100);
-			data.put("y", 100);
-			data.put("action", "idle");
-			obj.put("data", data);
-			socket.emit("message", obj);
-		} catch(Exception e) {
-			System.out.println(e);
-		}
-	}
-
 	public void setScreenMainMenu() {
 		setScreen(mainMenu);
 	}
@@ -160,5 +149,13 @@ public class ArkadGame extends Game {
 
 	public void setScreensaverOver(boolean screensaverOver) {
 		isScreensaverOver = screensaverOver;
+	}
+
+	@Override
+	public void dispose() {
+		/* System.out.println("SAVE  "+volume);
+		prefs.putFloat("volume", volume);
+		prefs.flush(); */
+		super.dispose();
 	}
 }
