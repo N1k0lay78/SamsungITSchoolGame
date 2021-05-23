@@ -16,6 +16,8 @@ public class OpenGameScreen extends BaseScreen {
     final private float deltaSpeed;
     final private float waitTime;
     private float wait;
+    // для музыки
+    private boolean startMusic=false;
     private int page; // какая картинка
     // режим отладки картиок (будут крутиться по кругу и не выключаться)
     final private boolean test = false;
@@ -106,6 +108,11 @@ public class OpenGameScreen extends BaseScreen {
         // получаем размер экрана
         this.width = width;
         this.height = height;
+        if (!startMusic) {
+            // включаем музыку
+            game.setMusic(0);
+            startMusic = true;
+        }
         batch.getProjectionMatrix().setToOrtho2D(0, 0, this.width, this.height);
     }
 
