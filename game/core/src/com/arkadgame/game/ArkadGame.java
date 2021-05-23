@@ -152,6 +152,8 @@ public class ArkadGame extends Game {
 		sound.setVolume(bgMusicID, vol);
 	}
 
+	public float getVolume() { return volume; }
+
 	public boolean isScreensaverOver() {
 		return isScreensaverOver;
 	}

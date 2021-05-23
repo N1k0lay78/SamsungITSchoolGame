@@ -72,6 +72,7 @@ public class Slider extends CustomActor {
     }
 
     // гетеры и сетеры
+    public void    set(float val) {this.value = val;}
     public void    setType(String type) {this.type = type;}
     public void    setZoom(float zoom)  { this.zoom = zoom;}
     public String  getType()   { return type; }
