@@ -20,12 +20,12 @@ public class Barrel extends CustomActor {
     private Terminator terminator;
     private Random random = new java.util.Random();
     private String type = "Barrel";
-    private float gravity = 1700;
+    private float gravity = 1700; // 1700
     private float angle = 1;
-    private float speedRotation = -525f;
+    private float speedRotation = -525f; // -525
     private float time = 0f;
     private float destroyTime = 0f;
-    private float xSpeed = 225f;
+    private float xSpeed = 225f; // 225
     private float ySpeed = 0f;
     private float sx = 0f;
     private float sy = 0f;
@@ -91,7 +91,7 @@ public class Barrel extends CustomActor {
         } else {
             if (!onHand) {
                 if (onStairs) {
-                    this.move_up(-255 * time);
+                    this.move_up(-Math.abs(xSpeed) * time);
                     updateTextureStairs(time * 255);
                 } else {
                     barrelRegion = new TextureRegion(barrelTexture, 32, 16, 16, 16);

@@ -16,8 +16,8 @@ public class Terminator extends CustomActor {
     private Person person;
     private Random random = new java.util.Random();
     private String type = "Terminator";
-    private float throwDelayTime = 1.25f;
-    private float THROWDELAYTIME = 1.25f;
+    private float throwDelayTime = 1.75f;
+    private float THROWDELAYTIME = 1.75f;
     private float curTime = 0f;
     private float idleTime = 0f;
     private float throwTime = 0f;
@@ -98,7 +98,7 @@ public class Terminator extends CustomActor {
             if (frameThrow < 25) {
                 frameThrow++;
             } else {
-                throwDelayTime = THROWDELAYTIME * random.nextFloat() + 0.5f;
+                throwDelayTime = THROWDELAYTIME * random.nextFloat() + 0.6f;
                 frameThrow = 0;
                 isThrow = false;
                 throwDelay = true;
@@ -114,7 +114,7 @@ public class Terminator extends CustomActor {
     public void update(float time) {
         boolean can = !agrMod;
         if (!agrMod) {
-            if (this.getY() - person.getY() < 200) {
+            if (this.getY() - person.getY() < 500) {
                 agrMod = true;
                 THROWDELAYTIME /= 2;
             }

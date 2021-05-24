@@ -6,6 +6,7 @@ import com.arkadgame.game.obj.Background;
 import com.arkadgame.game.obj.Barrel;
 import com.arkadgame.game.obj.Button;
 import com.arkadgame.game.obj.CustomActor;
+import com.arkadgame.game.obj.Decorations;
 import com.arkadgame.game.obj.Stairs;
 import com.arkadgame.game.obj.Terminator;
 import com.arkadgame.game.obj.Text;
@@ -66,24 +67,37 @@ public class MainGameScreen extends BaseScreen {
     private float minX = 500;
     private float maxX = 640;
     private float minY = 240f;
-    private float maxY = 1800f;
+    private float maxY = 4000f;
     private float scale = 1;
     private float newX = 0;
     private float newY = 0;
     private float offset;
     private float zoom;
-    private final int WIDTH = 1440;
-    private final int HEIGHT = 810;
+    private float cameraY = 0;
+    private float cameraX = 0;
+    private final int WIDTH = 1920;//!!!!
+    private final int HEIGHT = 1080;
     private int speed = 2;
-    private int width = 1440;
-    private int height = 810;
+    private int width = 1920; //1440
+    private int height = 1080;//810
     private int cPause = 0;
+    private int cameraSpeed = -145;
     private boolean showResetButtonBool;
     private boolean showGameOverBool;
     private boolean pause = false;
     private boolean clear = true;
     private boolean agrMusic = false;
+    private boolean BeautifulCamera = false;
 
+
+    public void createBeautifulCamera() {
+        cameraX = 300;
+        cameraY = 192 * 20 - 400;
+    }
+
+    public void updateBeautifulCamera(float time) {
+        cameraY += cameraSpeed * time;
+    }
 
     @Override
     public void show() {
@@ -93,6 +107,8 @@ public class MainGameScreen extends BaseScreen {
         stage = new Stage();
         createButtons();
         createUI();
+        createBeautifulCamera();
+        BeautifulCamera = true;
         this.recreate();
     }
 
@@ -125,72 +141,59 @@ public class MainGameScreen extends BaseScreen {
         this.maxX = (1056 * scale - stage.getWidth() / 2);
         this.minY = (stage.getHeight() / 2);
         if (maxX < minX) {
-            maxX *= 2;
+            maxX = minX;
         }
         int layer = 0;
         int step = 48;
-        int stairs = 10;
-        for (int i=stairs; i > 0; i--) {
-            layer = i*4 + 2;
+        int stairs = 8;
+        int newStairs = -10;
+        int lastStairs = -10;
+        int secondLastStairs = -10;
+        for (int i = stairs; i > 0; i--) {
+            layer = i * 4 + 2;
             if (i % 2 == 0) {
-                this.create_platform_on(step, layer*step, 17);
-                if (i != stairs) {
-                    this.create_stairs_on(step*16, (layer+1)*step, 4);
-                } else {
-                    terminator.setPosition(3*step, (layer+1)*step);
+                this.create_platform_on(step, layer * step, 17);
+                if (i < stairs - 1) {
+                    lastStairs = 17 - random.nextInt(13);
+                    this.create_stairs_on(step * lastStairs, (layer + 1) * step, 4);
+                    if (random.nextInt(2) == 1) {
+                        do {
+                            newStairs = 17 - random.nextInt(13);
+                        }
+                        while (Math.abs(newStairs - lastStairs) < 5 || Math.abs(newStairs - secondLastStairs) < 2);
+                        this.create_stairs_on(step * newStairs, (layer + 1) * step, 4);
+                    }
+                } else if (stairs == i) {
+                    Decorations barrels = new Decorations(texturaPinchos, 0, 48, 48, 32);
+                    barrels.setPosition(step, (layer + 1) * step);
+                    stage.addActor(barrels);
+                    terminator.setPosition(3 * step, (layer + 1) * step);
                 }
+                System.out.println(stairs + " " + i);
             } else {
-                this.create_platform_on(5*step, layer*step, 17);
-                if (i != stairs) {
-                    this.create_stairs_on(step*7, (layer+1)*step, 4);
+                this.create_platform_on(5 * step, layer * step, 17);
+                if (stairs - 1 == i) {
+                    this.create_stairs_on(step * 15, (layer + 1) * step, 4);
+                } else {
+                    lastStairs = 5 + random.nextInt(13);
+                    this.create_stairs_on(step * lastStairs, (layer + 1) * step, 4);
+                    if (random.nextInt(2) == 1) {
+                        do {
+                            newStairs = 5 + random.nextInt(13);
+                        }
+                        while (Math.abs(newStairs - lastStairs) < 5 || Math.abs(newStairs - secondLastStairs) < 2);
+                        this.create_stairs_on(step * newStairs, (layer + 1) * step, 4);
+                    }
                 }
             }
+            secondLastStairs = newStairs;
+            newStairs = -1;
         }
         //System.out.println("SPAWN");
         person.setPosition(360, 3 * step);
-        this.create_acid_on(0, 0, 22);
+        this.create_acid_on(0, 0, 24);
         this.create_platform_on(0, 2 * step, 17);
-        this.create_stairs_on(step*10, 3*step, 4);
-        /*
-        this.create_acid_on(0, layer * step, 22);
-        layer+=2;
-        person.setPinchoss(this.pinchos);
-        person.setPosition(260, (layer+1) * step);
-        this.create_platform_on(0, layer * step, 17);
-        this.create_stairs_on(step, (layer+1)*step, 4);
-        this.create_stairs_on(step*10, (layer+1)*step, 4);
-        layer+=4;
-        this.create_platform_on(0, layer*step, 3);
-        this.create_stairs_on(step, (layer+1)*step, 4);
-        this.create_platform_on(8*step, layer*step, 17);
-        this.create_stairs_on(step*10, (layer+1)*step, 4);
-        layer+=4;
-        this.create_platform_on(0, layer*step, 3);
-        this.create_stairs_on(step, (layer+1)*step, 4);
-        this.create_platform_on(4*step, layer*step, 17);
-        this.create_stairs_on(step*10, (layer+1)*step, 4);
-        layer+=4;
-        this.create_platform_on(0, layer*step, 3);
-        this.create_stairs_on(step, (layer+1)*step, 4);
-        this.create_platform_on(8*step, layer*step, 17);
-        this.create_stairs_on(step*10, (layer+1)*step, 4);
-        layer+=4;
-        this.create_platform_on(0, layer*step, 3);
-        this.create_stairs_on(step, (layer+1)*step, 4);
-        this.create_platform_on(4*step, layer*step, 17);
-
-        terminator.setPosition(6*step, (layer+1)*step);
-
-        /*
-        this.create_platform_on(144, 96, 19);
-        this.create_platform_on(48, 288, 17);
-        this.create_stairs_on(672, 144, 4);
-        this.create_platform_on(240, 480, 17);
-        this.create_stairs_on(336, 336, 4);
-        this.create_platform_on(48, 674, 17);
-        this.create_stairs_on(684, 530, 4);
-        this.create_platform_on(240, 480, 17);
-        */
+        this.create_stairs_on(step * 10, 3 * step, 4);
         person.setPinchoss(this.pinchos);
         stage.addActor(person);
         pinchos.add(person);
@@ -265,23 +268,23 @@ public class MainGameScreen extends BaseScreen {
                 agrMusic = true;
                 game.setMusic(2);
             }
-             if (offsetTime > 0.1) {
-                 offsetTime = 0;
-                 this.createOffset(125, 125);
-             }
+            if (offsetTime > 0.1) {
+                offsetTime = 0;
+                this.createOffset(125, 125);
+            }
         }
         if (offsetTime > 0.1) {
             offsetX = 0;
-            offsetY = 0;
-        }
         if (!person.isAlive()) {
             showResetButton();
             showShowGameOver();
+            offsetY = 0;
+        }
         } else {
             hideResetButton();
             hideShowGameOver();
         }
-        person.setAlive(true);
+        // person.setAlive(true);
         this.checkButtons(delta);
         if (terminator.getAgrMod()) {
             newX = terminator.getX() * scale + offsetX;
@@ -290,6 +293,11 @@ public class MainGameScreen extends BaseScreen {
             newX = person.getX() * scale + offsetX;
             newY = person.getY() * scale + offsetY;
         }
+        if (BeautifulCamera) {
+            updateBeautifulCamera(delta);
+            newX = cameraX;
+            newY = cameraY;
+        }
         if (newX < minX) {
             newX = minX;
         } else if (newX > maxX) {
@@ -297,6 +305,9 @@ public class MainGameScreen extends BaseScreen {
         }
         if (newY < minY) {
             newY = minY;
+            if (BeautifulCamera) {
+                BeautifulCamera = false;
+            }
         }
         offsetTime += delta;
         camera.position.lerp(new Vector3(newX, newY, 0f), 0.1f);
@@ -319,15 +330,17 @@ public class MainGameScreen extends BaseScreen {
             i.draw(stage.getBatch(), 0);
         }
         stage.getBatch().end();
-        batch.begin();
-        for (Button butt : buttons) {
-            butt.draw(batch, 1f);
+        if (!BeautifulCamera) {
+            batch.begin();
+            for (Button butt : buttons) {
+                butt.draw(batch, 1f);
+            }
+            for (Text text : texts) {
+                text.draw(batch, 1f);
+                text.update(delta);
+            }
+            batch.end();
         }
-        for (Text text : texts) {
-            text.draw(batch, 1f);
-            text.update(delta);
-        }
-        batch.end();
     }
 
     public void resize(int width, int height) {
@@ -366,7 +379,7 @@ public class MainGameScreen extends BaseScreen {
             showResetButtonBool = false;
             for (Button but : buttons) {
                 if (but.getType().equalsIgnoreCase("ResetButton")) {
-                    but.setPosition( -1000, height - offsetY - but.getHeight());
+                    but.setPosition(-1000, height - offsetY - but.getHeight());
                 }
             }
         }
@@ -388,7 +401,7 @@ public class MainGameScreen extends BaseScreen {
             showGameOverBool = false;
             for (Text text : texts) {
                 if (text.getType().equalsIgnoreCase("GameOver")) {
-                    text.setPosition( -1000, height - offsetY - text.getHeight());
+                    text.setPosition(-1000, height - offsetY - text.getHeight());
                 }
             }
         }
@@ -465,11 +478,11 @@ public class MainGameScreen extends BaseScreen {
     public void createOffset(int x, int y) {
         offsetTime = 0;
         offsetX = random.nextInt(x);
-        if (random.nextInt(1) == 1) {
+        if (random.nextInt(2) == 1) {
             offsetX *= -1;
         }
         offsetY = random.nextInt(y);
-        if (random.nextInt(1) == 1) {
+        if (random.nextInt(2) == 1) {
             offsetY *= -1;
         }
     }
