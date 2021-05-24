@@ -75,9 +75,9 @@ public class Person extends CustomActor {
         if (this.isAlive()) {
             if (Gdx.app.getType() == Application.ApplicationType.Desktop) {
                 if (process.getShift()) {
-                    this.speed = 260;
+                    this.speed = 320;
                 } else {
-                    this.speed = 140;
+                    this.speed = 260;
                 }
             } else {
                 this.speed = 260;
