@@ -475,7 +475,7 @@ public class MainGameScreen extends BaseScreen {
         showResetButtonBool = true;
         button = new Button(buttonTexture, 32, 32, 64, 64, zoom, false);
         button.setType("ResetButton");
-        button.setPosition(offset, height - offsetY - button.getHeight());
+        button.setPosition(-1000, height - offsetY - button.getHeight());
         buttons.add(button);
     }
 
