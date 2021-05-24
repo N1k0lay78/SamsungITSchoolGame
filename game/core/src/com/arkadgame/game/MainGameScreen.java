@@ -292,6 +292,9 @@ public class MainGameScreen extends BaseScreen {
                 hideShowWin();
             }
         }
+        if (person.getIsWin()) {
+            game.setMusic(3);
+        }
         person.setAlive(true);
         this.checkButtons(delta);
         if (terminator.getAgrMod()) {
