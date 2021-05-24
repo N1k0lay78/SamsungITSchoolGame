@@ -34,10 +34,10 @@ public class ArkadGame extends Game {
     private AssetManager assetManager;
     private Preferences prefs;
 
-    public ArkadGame() {
+    public ArkadGame(float val) {
         // Preferences prefs = Gdx.app.getPreferences("arkad-game");
         // volume = prefs.getFloat("volume");
-        volume = 0.25f;
+        volume = val;
         // System.out.println("LOAD "+volume);
     }
 

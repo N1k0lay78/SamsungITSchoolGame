@@ -11,6 +11,6 @@ public class DesktopLauncher {
 		cfg.height = 480;
 		cfg.width = 720;
 		//cfg.fullscreen = true;
-		new LwjglApplication(new ArkadGame(), cfg);
+		new LwjglApplication(new ArkadGame(0.25f), cfg);
 	}
 }

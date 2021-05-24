@@ -500,7 +500,8 @@ public class MainGameScreen extends BaseScreen {
         currButton = "None";
         float x = Gdx.input.getX(), x2 = Gdx.input.getX(1);
         float y = height - Gdx.input.getY(), y2 = height - Gdx.input.getY(1);
-        boolean press = Gdx.input.isButtonPressed(0), press2 = Gdx.input.isTouched(1);
+        boolean press = Gdx.input.isTouched(0), press2 = Gdx.input.isTouched(1);
+        System.out.println(press+" "+press2);
         if (BeautifulCamera&&Gdx.input.isButtonJustPressed(0)) {
             cameraSpeed *= 2.5f;
         }
