@@ -129,6 +129,7 @@ public class ArkadGame extends Game {
 		if (mainGameScreen.getCurrButton().equalsIgnoreCase("MenuButton")) {
 			mainGameScreen.clearCurrButton();
 			mainMenu.clearAction();
+			setMusic(0);
 			currentScene = "MainMenu";
 			setScreen(mainMenu);
 		}
