@@ -87,7 +87,7 @@ public class MainGameScreen extends BaseScreen {
     private boolean pause = false;
     private boolean clear = true;
     private boolean agrMusic;
-    private boolean BeautifulCamera = false;
+    private boolean BeautifulCamera = true;
     private boolean showWin = false;
     private String currButton = "None";
     private boolean musicWin;
@@ -116,6 +116,10 @@ public class MainGameScreen extends BaseScreen {
         camera = new OrthographicCamera(WIDTH, HEIGHT);
         batch = new SpriteBatch();
         stage = new Stage();
+        createButtons();
+        createUI();
+        createBeautifulCamera();
+        BeautifulCamera = true;
         this.recreate();
         createBeautifulCamera();
     }
