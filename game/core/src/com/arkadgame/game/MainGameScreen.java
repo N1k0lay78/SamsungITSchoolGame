@@ -86,10 +86,11 @@ public class MainGameScreen extends BaseScreen {
     private boolean showGameOverBool;
     private boolean pause = false;
     private boolean clear = true;
-    private boolean agrMusic = false;
+    private boolean agrMusic;
     private boolean BeautifulCamera = false;
     private boolean showWin = false;
     private String currButton = "None";
+    private boolean musicWin;
 
 
     public void createBeautifulCamera() {
@@ -117,6 +118,10 @@ public class MainGameScreen extends BaseScreen {
     public void recreate() {
         person = new Person(personTexture);
         terminator = new Terminator(terminatorTexture, this, person);
+        agrMusic = false;
+        musicWin = false;
+        showResetButtonBool = false;
+        showGameOverBool = false;
         float c_x = person.getX(), c_y = person.getY();
         if (c_x < minX) {
             c_x = minX;
@@ -293,6 +298,11 @@ public class MainGameScreen extends BaseScreen {
                 hideShowWin();
             }
         }
+        if (person.getIsWin()&&!musicWin) {
+            musicWin = true;
+            agrMusic = false;
+            game.setMusic(3);
+        }
         person.setAlive(true);
         this.checkButtons(delta);
         if (terminator.getAgrMod()) {
@@ -368,11 +378,11 @@ public class MainGameScreen extends BaseScreen {
         showGameOverBool = true;
         showWin = true;
         Text text = new Text(buttonTexture, 240, 64, 96, 64, zoom * 0.6f);
-        text.setPosition((width - text.getWidth()) / 2, (height * 1.2f - text.getHeight()) / 2);
+        text.setPosition(-1000, (height * 1.2f - text.getHeight()) / 2);
         text.setType("GameOver");
         texts.add(text);
         text = new Text(buttonTexture, 448, 64, 80, 64, zoom * 0.6f);
-        text.setPosition((width - text.getWidth()) / 2, (height * 1.2f - text.getHeight()) / 2);
+        text.setPosition(-1000, (height * 1.2f - text.getHeight()) / 2);
         text.setType("Win");
         texts.add(text);
     }
@@ -470,7 +480,7 @@ public class MainGameScreen extends BaseScreen {
         showResetButtonBool = true;
         button = new Button(buttonTexture, 32, 32, 64, 64, zoom, false);
         button.setType("ResetButton");
-        button.setPosition(offset, height - offsetY - button.getHeight());
+        button.setPosition(-1000, height - offsetY - button.getHeight());
         buttons.add(button);
     }
 
