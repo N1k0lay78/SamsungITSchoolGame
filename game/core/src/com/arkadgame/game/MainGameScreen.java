@@ -75,8 +75,8 @@ public class MainGameScreen extends BaseScreen {
     private float zoom;
     private float cameraY = 0;
     private float cameraX = 0;
-    private final int WIDTH = 720;
-    private final int HEIGHT = 405;
+    private final int WIDTH = 880;
+    private final int HEIGHT = 495;
     private int speed = 2;
     private int width = 1440; //1440 1600
     private int height = 810;//810 900
@@ -97,7 +97,7 @@ public class MainGameScreen extends BaseScreen {
         cameraX = 300;
         cameraSpeed = -145;
         System.out.println(scale);
-        cameraY = 192 * 14 * scale;
+        cameraY = 192 * 17.5f * scale;
         this.scale = stage.getWidth() / 1100;
     }
 
