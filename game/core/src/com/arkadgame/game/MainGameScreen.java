@@ -89,6 +89,7 @@ public class MainGameScreen extends BaseScreen {
     private boolean agrMusic = false;
     private boolean BeautifulCamera = false;
     private boolean showWin = false;
+    private String currButton = "None";
 
 
     public void createBeautifulCamera() {
@@ -357,7 +358,7 @@ public class MainGameScreen extends BaseScreen {
         this.height = height;
         this.offset = height * 0.03f;
         batch.getProjectionMatrix().setToOrtho2D(0, 0, this.width, this.height);
-        zoom = height / 125f;
+        zoom = height / 150f;
         createButtons();
         createUI();
     }
@@ -462,6 +463,10 @@ public class MainGameScreen extends BaseScreen {
         button.setType("DownButton");
         button.setPosition(width - offset - button.getWidth(), offset);
         buttons.add(button);
+        button = new Button(buttonTexture, 32, 32, 0, 160, zoom, false);
+        button.setType("MenuButton");
+        button.setPosition(width - offset - button.getWidth(), height - offset - button.getHeight());
+        buttons.add(button);
         showResetButtonBool = true;
         button = new Button(buttonTexture, 32, 32, 64, 64, zoom, false);
         button.setType("ResetButton");
@@ -470,6 +475,7 @@ public class MainGameScreen extends BaseScreen {
     }
 
     private void checkButtons(float time) {
+        currButton = "None";
         float x = Gdx.input.getX(), x2 = Gdx.input.getX(1);
         float y = height - Gdx.input.getY(), y2 = height - Gdx.input.getY(1);
         boolean press = Gdx.input.isButtonPressed(0), press2 = Gdx.input.isTouched(1);
@@ -507,6 +513,11 @@ public class MainGameScreen extends BaseScreen {
                     this.recreate();
                 }
             }
+            if (butt.getType().equalsIgnoreCase("MenuButton")) {
+                if (butt.checkCollision(x, y)&&press) {
+                    this.currButton = butt.getType();
+                }
+            }
         }
     }
 
@@ -527,4 +538,7 @@ public class MainGameScreen extends BaseScreen {
         stage.dispose();
         clear = true;
     }
+
+    public String getCurrButton() { return currButton; }
+    public void clearCurrButton() { currButton = "None"; }
 }

@@ -126,6 +126,12 @@ public class ArkadGame extends Game {
 			currentScene = "MainMenu";
 			setScreen(mainMenu);
 		}
+		if (mainGameScreen.getCurrButton().equalsIgnoreCase("MenuButton")) {
+			mainGameScreen.clearCurrButton();
+			mainMenu.clearAction();
+			currentScene = "MainMenu";
+			setScreen(mainMenu);
+		}
 		if (mainMenu.getCurrButton().equalsIgnoreCase("settingsButton")) {
 			mainMenu.clearAction();
 			setScreen(settingsScreen);
@@ -141,6 +147,7 @@ public class ArkadGame extends Game {
 			setMusic(1);
 			currentScene = "Level1";
 			mainMenu.clearAction();
+			mainGameScreen.clearCurrButton();
 			setScreen(mainGameScreen);
 		}
 		super.render();
