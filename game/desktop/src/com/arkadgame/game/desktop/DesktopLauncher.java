@@ -10,6 +10,7 @@ public class DesktopLauncher {
 		cfg.title = "CyberKong";
 		cfg.height = 480;
 		cfg.width = 720;
+		//cfg.fullscreen = true;
 		new LwjglApplication(new ArkadGame(), cfg);
 	}
 }

@@ -37,7 +37,7 @@ public class ArkadGame extends Game {
 	public ArkadGame() {
 		// Preferences prefs = Gdx.app.getPreferences("arkad-game");
 		// volume = prefs.getFloat("volume");
-		volume = 1f;
+		volume = 0.25f;
 		// System.out.println("LOAD "+volume);
 	}
 
