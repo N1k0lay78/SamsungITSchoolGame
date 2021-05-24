@@ -27,6 +27,7 @@ public class ArkadGame extends Game {
 	private Sound sound;
 	private Sound music_1;
 	private Sound music_2;
+	private Sound music_3;
 	private int musicNum;
 	private float volume;
 	private long bgMusicID;
@@ -49,6 +50,7 @@ public class ArkadGame extends Game {
 		assetManager.load("main menu (1).mp3", Sound.class);
 		assetManager.load("music_2.mp3", Sound.class);
 		assetManager.load("music_3.mp3", Sound.class);
+		assetManager.load("music_4.mp3", Sound.class);
 		assetManager.finishLoading(); //Important!
 		System.out.println("ISLOADED"+assetManager.isLoaded(Gdx.files.internal("main menu (1).mp3").toString()));
 		sound = assetManager.get("main menu (1).mp3", Sound.class);
@@ -92,6 +94,15 @@ public class ArkadGame extends Game {
 			music_2.setLooping(bgMusicID, true);
 		} else if (music_2 != null) {
 			music_2.stop();
+		}
+		if (num == 3) {
+			if (music_3 == null) {
+				music_3 = assetManager.get("music_4.mp3", Sound.class);
+			}
+			bgMusicID = music_3.play(volume);
+			music_3.setLooping(bgMusicID, true);
+		} else if (music_3 != null) {
+			music_3.stop();
 		}
 		musicNum = num;
 	}
