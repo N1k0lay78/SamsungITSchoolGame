@@ -75,11 +75,11 @@ public class MainGameScreen extends BaseScreen {
     private float zoom;
     private float cameraY = 0;
     private float cameraX = 0;
-    private final int WIDTH = 1920;//!!!!
-    private final int HEIGHT = 1080;
+    private final int WIDTH = 800;
+    private final int HEIGHT = 450;
     private int speed = 2;
-    private int width = 1920; //1440
-    private int height = 1080;//810
+    private int width = 1440; //1440 1600
+    private int height = 810;//810 900
     private int cPause = 0;
     private int cameraSpeed = -145;
     private boolean showResetButtonBool;
@@ -141,7 +141,7 @@ public class MainGameScreen extends BaseScreen {
         clear = false;
         this.pinchos = new ArrayList<>(2000);
         stage.getViewport().setCamera(camera);
-        this.scale = stage.getWidth() / HEIGHT;
+        this.scale = stage.getWidth() / WIDTH;
         Background background = new Background(menuTexture);
         stage.addActor(background);
         this.minX = (stage.getWidth() / 2);
@@ -152,7 +152,7 @@ public class MainGameScreen extends BaseScreen {
         }
         int layer = 0;
         int step = 48;
-        int stairs = 8;
+        int stairs = 20;
         int newStairs = -10;
         int lastStairs = -10;
         int secondLastStairs = -10;
@@ -392,7 +392,7 @@ public class MainGameScreen extends BaseScreen {
             showResetButtonBool = true;
             for (Button but : buttons) {
                 if (but.getType().equalsIgnoreCase("ResetButton")) {
-                    but.setPosition(offset, height - offsetY - but.getHeight());
+                    but.setPosition(offset, height - offset - but.getHeight());
                 }
             }
         }
@@ -520,7 +520,8 @@ public class MainGameScreen extends BaseScreen {
             }
             if (butt.getType().equalsIgnoreCase("ResetButton")) {
                 if (butt.checkCollision2(press, x, y, press2, x2, y2)) {
-                    this.recreate();
+                    this.stage.dispose();
+                    this.show();
                 }
             }
             if (butt.getType().equalsIgnoreCase("MenuButton")) {
