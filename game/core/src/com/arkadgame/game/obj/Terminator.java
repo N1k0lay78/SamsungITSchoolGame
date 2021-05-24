@@ -16,8 +16,8 @@ public class Terminator extends CustomActor {
     private Person person;
     private Random random = new java.util.Random();
     private String type = "Terminator";
-    private float throwDelayTime = 1.25f;
-    private float THROWDELAYTIME = 1.25f;
+    private float throwDelayTime = 1.6f;
+    private float THROWDELAYTIME = 1.6f;
     private float curTime = 0f;
     private float idleTime = 0f;
     private float throwTime = 0f;

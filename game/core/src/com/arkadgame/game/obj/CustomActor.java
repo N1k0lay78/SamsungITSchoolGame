@@ -8,7 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 public class CustomActor extends Actor {
     public String type = "CustomActor";
 
-    public CustomActor () {
+    public CustomActor() {
     }
 
 

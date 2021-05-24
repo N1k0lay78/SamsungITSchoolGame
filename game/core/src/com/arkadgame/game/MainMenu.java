@@ -65,15 +65,15 @@ public class MainMenu extends BaseScreen {
         Button button; // Button(buttonTexture, sizeX, sizeY, x, y, zoom, true);
         button = new Button(buttonTexture, 133, 32, 128, 0, zoom, true);
         button.setType("PlayButton");
-        button.setPosition(-button.getWidth(),height - this.offset - 32 * zoom);
+        button.setPosition(-button.getWidth(), height - this.offset - 32 * zoom);
         buttons.add(button);
         button = new Button(buttonTexture, 196, 32, 272, 0, zoom, true);
         button.setType("SettingsButton");
-        button.setPosition(-button.getWidth(),height - height * 0.2f - 2 * 32 * zoom);
+        button.setPosition(-button.getWidth(), height - height * 0.2f - 2 * 32 * zoom);
         buttons.add(button);
         button = new Button(buttonTexture, 118, 32, 480, 0, zoom, true);
         button.setType("ExitButton");
-        button.setPosition(-button.getWidth(),height - height * 0.3f - 3 * 32 * zoom);
+        button.setPosition(-button.getWidth(), height - height * 0.3f - 3 * 32 * zoom);
         buttons.add(button);
         /*
         button = new Button(buttonTexture, 128, 0, 133, 32, zoom, true);
@@ -114,12 +114,12 @@ public class MainMenu extends BaseScreen {
         // отрисовка
         batch.begin();
         batch.draw(menuTexture, 0, 0, width, height);
-        for (int i=0; i < buttons.size(); i++) {
+        for (int i = 0; i < buttons.size(); i++) {
             if (i < movingButton) {
                 // немного оптимизации
                 buttons.get(i).draw(batch, 1f);
             } else if (i == movingButton) {
-                buttons.get(i).draw(batch, (buttons.get(movingButton).getX() + buttons.get(i).getWidth())/(buttons.get(i).getWidth() + this.offset));
+                buttons.get(i).draw(batch, (buttons.get(movingButton).getX() + buttons.get(i).getWidth()) / (buttons.get(i).getWidth() + this.offset));
             }
         }
         batch.end();
@@ -135,12 +135,14 @@ public class MainMenu extends BaseScreen {
             activeButton = null;
         }
         currButton = "None";
-        for (Button butt: buttons) {
+        for (Button butt : buttons) {
             if (butt.checkCollision(x, y)) {
                 // System.out.println("HAVE ACTIVE BUTTON");
                 butt.setActive(true); // зачем если это делается в колижн?
                 activeButton = butt;
-                if (press) { currButton = butt.getType(); }
+                if (press) {
+                    currButton = butt.getType();
+                }
                 break;
             }
         }

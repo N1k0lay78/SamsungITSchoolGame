@@ -17,7 +17,7 @@ public class OpenGameScreen extends BaseScreen {
     final private float waitTime;
     private float wait;
     // для музыки
-    private boolean startMusic=false;
+    private boolean startMusic = false;
     private int page; // какая картинка
     // режим отладки картиок (будут крутиться по кругу и не выключаться)
     final private boolean test = false;
@@ -52,7 +52,7 @@ public class OpenGameScreen extends BaseScreen {
     @Override
     public void render(float delta) {
         // сложо очень сложно
-            if (alpha < 1f) {
+        if (alpha < 1f) {
             if (wait > 0) { // появление изображения
                 alpha += deltaSpeed * delta;
             } else { // стерание изображения
@@ -90,7 +90,7 @@ public class OpenGameScreen extends BaseScreen {
         // перекладываем бардюры
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         // задаём прозрачность
-        batch.setColor(new Color(1,1,1,alpha));
+        batch.setColor(new Color(1, 1, 1, alpha));
         // отрисовка
         batch.begin();
         if (page == 0) { // первая картинка логотип

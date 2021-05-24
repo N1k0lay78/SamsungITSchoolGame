@@ -10,12 +10,12 @@ public class ActorPinchos extends CustomActor {
     private int sizeX = 48;
     private int sizeY = 48;
 
-    public ActorPinchos (TextureRegion pinchos) {
-        this.pinchos=pinchos;
+    public ActorPinchos(TextureRegion pinchos) {
+        this.pinchos = pinchos;
         setSize(sizeX, sizeY);
     }
 
-    public void act (float delta){
+    public void act(float delta) {
 
     }
 

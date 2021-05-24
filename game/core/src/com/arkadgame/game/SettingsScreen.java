@@ -46,20 +46,20 @@ public class SettingsScreen extends BaseScreen {
     public void show() {
         // создаём интерфейс
         zoom = height / 200f;
-        nameText = new Text(buttonTexture, 187, 128, 184, 32, zoom*2/3);
+        nameText = new Text(buttonTexture, 187, 128, 184, 32, zoom * 2 / 3);
         float step = nameText.getHeight();
-        nameText.setPosition(width/2-nameText.getWidth()/2, height - offset - step);
-        volumeText = new Text(buttonTexture, 0, 128, 187, 32, zoom/2);
+        nameText.setPosition(width / 2 - nameText.getWidth() / 2, height - offset - step);
+        volumeText = new Text(buttonTexture, 0, 128, 187, 32, zoom / 2);
         step += volumeText.getHeight();
-        volumeText.setPosition(width/2-volumeText.getWidth()/2, height - 2*offset - step);
+        volumeText.setPosition(width / 2 - volumeText.getWidth() / 2, height - 2 * offset - step);
         volume = new Slider(buttonTexture, 0, 0, zoom, 0.5f);
         step += volume.getHeight();
-        volume.setPosition(width/2-volume.getWidth()/2, height - 3*offset - step);
+        volume.setPosition(width / 2 - volume.getWidth() / 2, height - 3 * offset - step);
         volume.setType("VolumeSlider");
-        ready = new Button(buttonTexture, 126, 32, 371, 128, zoom/2, false);
+        ready = new Button(buttonTexture, 126, 32, 371, 128, zoom / 2, false);
         ready.setType("ReadyButton");
         step += ready.getHeight();
-        ready.setPosition(width/2-ready.getWidth()/2, height - 4*offset - step);
+        ready.setPosition(width / 2 - ready.getWidth() / 2, height - 4 * offset - step);
         volume.set(game.getVolume());
     }
 
@@ -100,10 +100,10 @@ public class SettingsScreen extends BaseScreen {
     private void checkButtonPress(float x, float y, boolean press) {
         currButton = "None";
         // обновление UI
-        if (volume.checkCollision(x, y, press)&&press) {
+        if (volume.checkCollision(x, y, press) && press) {
             game.setVolume(volume.getVolume());
         }
-        if (ready.checkCollision(x, y)&&press) {
+        if (ready.checkCollision(x, y) && press) {
             currButton = ready.getType();
         }
     }

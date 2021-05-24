@@ -53,12 +53,15 @@ public class Person extends CustomActor {
     public void setW(boolean n) {
         W = n;
     }
+
     public void setS(boolean n) {
         S = n;
     }
+
     public void setD(boolean n) {
         D = n;
     }
+
     public void setA(boolean n) {
         A = n;
     }
@@ -350,17 +353,16 @@ public class Person extends CustomActor {
                     (pinchos.getY() + pinchos.getHeight() > this.getHeight() + this.getY() || pinchos.getY() + pinchos.getHeight() > this.getY())) {
                 y_col = true;
             }
-            if (x_col && y_col && !pinchos.getType().equalsIgnoreCase("Person")&&!pinchos.getType().equalsIgnoreCase("BaseStairs")&&
+            if (x_col && y_col && !pinchos.getType().equalsIgnoreCase("Person") && !pinchos.getType().equalsIgnoreCase("BaseStairs") &&
                     !pinchos.getType().equalsIgnoreCase("DestroyBarrel")) {
-                if (pinchos.getType().equalsIgnoreCase("Barrel")||pinchos.getType().equalsIgnoreCase("Acid")) {
+                if (pinchos.getType().equalsIgnoreCase("Barrel") || pinchos.getType().equalsIgnoreCase("Acid")) {
                     this.setAlive(false);
                     return true;
                 }
                 if (pinchos.getType().equalsIgnoreCase("Terminator")) {
                     terminator.setAlive(false);
                     isWin = true;
-                }
-                else if (pinchos.getType().equalsIgnoreCase("Stairs")) {
+                } else if (pinchos.getType().equalsIgnoreCase("Stairs")) {
                     if (pinchos.getY() < this.getY() + 32) {
                         //System.out.println(moveDown + " " + ySpeed + " " + onStair);
                         if (pinchos.getY() < this.getY()) {

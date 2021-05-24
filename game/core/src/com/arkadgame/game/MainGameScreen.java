@@ -75,8 +75,8 @@ public class MainGameScreen extends BaseScreen {
     private float zoom;
     private float cameraY = 0;
     private float cameraX = 0;
-    private final int WIDTH = 800;
-    private final int HEIGHT = 450;
+    private final int WIDTH = 720;
+    private final int HEIGHT = 405;
     private int speed = 2;
     private int width = 1440; //1440 1600
     private int height = 810;//810 900
@@ -95,7 +95,15 @@ public class MainGameScreen extends BaseScreen {
 
     public void createBeautifulCamera() {
         cameraX = 300;
-        cameraY = 192 * 20 - 400;
+        cameraSpeed = -145;
+        System.out.println(scale);
+        cameraY = 192 * 14 * scale;
+        this.scale = stage.getWidth() / 1100;
+    }
+
+    public void closeBeautifulCamera() {
+        this.scale = stage.getWidth() / WIDTH;
+        BeautifulCamera = false;
     }
 
     public void updateBeautifulCamera(float time) {
@@ -108,14 +116,14 @@ public class MainGameScreen extends BaseScreen {
         camera = new OrthographicCamera(WIDTH, HEIGHT);
         batch = new SpriteBatch();
         stage = new Stage();
-        createButtons();
-        createUI();
-        createBeautifulCamera();
-        BeautifulCamera = false;
         this.recreate();
+        createBeautifulCamera();
     }
 
     public void recreate() {
+        createButtons();
+        createUI();
+        BeautifulCamera = true;
         person = new Person(personTexture);
         terminator = new Terminator(terminatorTexture, this, person);
         agrMusic = false;
@@ -142,6 +150,7 @@ public class MainGameScreen extends BaseScreen {
         this.pinchos = new ArrayList<>(2000);
         stage.getViewport().setCamera(camera);
         this.scale = stage.getWidth() / WIDTH;
+        System.out.println(stage.getWidth() + " " + this.scale);
         Background background = new Background(menuTexture);
         stage.addActor(background);
         this.minX = (stage.getWidth() / 2);
@@ -177,7 +186,6 @@ public class MainGameScreen extends BaseScreen {
                     terminator.setPosition(3 * step, (layer + 1) * step);
                     pinchos.add(terminator);
                 }
-                System.out.println(stairs + " " + i);
             } else {
                 this.create_platform_on(5 * step, layer * step, 17);
                 if (stairs - 1 == i) {
@@ -281,14 +289,10 @@ public class MainGameScreen extends BaseScreen {
                 this.createOffset(125, 125);
             }
         }
-        if (offsetTime > 0.1) {
-            offsetX = 0;
         if (!person.isAlive()) {
             showResetButton();
-            hideShowWin();
             showShowGameOver();
-            offsetY = 0;
-        }
+            hideShowWin();
         } else {
             hideResetButton();
             hideShowGameOver();
@@ -298,12 +302,16 @@ public class MainGameScreen extends BaseScreen {
                 hideShowWin();
             }
         }
-        if (person.getIsWin()&&!musicWin) {
+        if (offsetTime > 0.1) {
+            offsetX = 0;
+            offsetY = 0;
+        }
+        if (person.getIsWin() && !musicWin) {
             musicWin = true;
             agrMusic = false;
             game.setMusic(3);
         }
-        person.setAlive(true);
+        // person.setAlive(true);
         this.checkButtons(delta);
         if (terminator.getAgrMod()) {
             newX = terminator.getX() * scale + offsetX;
@@ -325,7 +333,7 @@ public class MainGameScreen extends BaseScreen {
         if (newY < minY) {
             newY = minY;
             if (BeautifulCamera) {
-                BeautifulCamera = false;
+                closeBeautifulCamera();
             }
         }
         offsetTime += delta;
@@ -489,6 +497,9 @@ public class MainGameScreen extends BaseScreen {
         float x = Gdx.input.getX(), x2 = Gdx.input.getX(1);
         float y = height - Gdx.input.getY(), y2 = height - Gdx.input.getY(1);
         boolean press = Gdx.input.isButtonPressed(0), press2 = Gdx.input.isTouched(1);
+        if (BeautifulCamera&&Gdx.input.isButtonJustPressed(0)) {
+            cameraSpeed *= 2.5f;
+        }
         for (Button butt : buttons) {
             if (butt.getType().equalsIgnoreCase("LeftButton")) {
                 if (butt.checkCollision2(press, x, y, press2, x2, y2) || process.getA()) {
@@ -520,12 +531,11 @@ public class MainGameScreen extends BaseScreen {
             }
             if (butt.getType().equalsIgnoreCase("ResetButton")) {
                 if (butt.checkCollision2(press, x, y, press2, x2, y2)) {
-                    this.stage.dispose();
-                    this.show();
+                    this.recreate();
                 }
             }
             if (butt.getType().equalsIgnoreCase("MenuButton")) {
-                if (butt.checkCollision(x, y)&&press) {
+                if (butt.checkCollision(x, y) && press) {
                     this.currButton = butt.getType();
                 }
             }
@@ -550,6 +560,11 @@ public class MainGameScreen extends BaseScreen {
         clear = true;
     }
 
-    public String getCurrButton() { return currButton; }
-    public void clearCurrButton() { currButton = "None"; }
+    public String getCurrButton() {
+        return currButton;
+    }
+
+    public void clearCurrButton() {
+        currButton = "None";
+    }
 }

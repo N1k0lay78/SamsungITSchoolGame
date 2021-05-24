@@ -15,13 +15,13 @@ public class Acid extends CustomActor {
     private int sizeY = 48;
     private float time = 0f;
 
-    public Acid (Texture acidTexture) {
-        this.acidTexture=acidTexture;
+    public Acid(Texture acidTexture) {
+        this.acidTexture = acidTexture;
         acidRegion = new TextureRegion(acidTexture, 16 * frame, 32, 16, 16);
         setSize(sizeX, sizeY);
     }
 
-    public void anim (){
+    public void anim() {
         time += Gdx.graphics.getDeltaTime();
         if (time > 0.5f) {
             time = 0f;
