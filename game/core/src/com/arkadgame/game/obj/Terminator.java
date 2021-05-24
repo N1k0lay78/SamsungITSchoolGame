@@ -16,8 +16,8 @@ public class Terminator extends CustomActor {
     private Person person;
     private Random random = new java.util.Random();
     private String type = "Terminator";
-    private float throwDelayTime = 1.75f;
-    private float THROWDELAYTIME = 1.75f;
+    private float throwDelayTime = 1.25f;
+    private float THROWDELAYTIME = 1.25f;
     private float curTime = 0f;
     private float idleTime = 0f;
     private float throwTime = 0f;
@@ -122,7 +122,7 @@ public class Terminator extends CustomActor {
         if (isAlive()) {
             boolean can = !agrMod;
             if (!agrMod) {
-                if (this.getY() - person.getY() < 500) {
+                if (this.getY() - person.getY() < 800) {
                     agrMod = true;
                     THROWDELAYTIME /= 2;
                 }
