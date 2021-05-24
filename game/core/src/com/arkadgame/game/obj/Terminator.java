@@ -22,6 +22,8 @@ public class Terminator extends CustomActor {
     private float idleTime = 0f;
     private float throwTime = 0f;
     private float agrTime = 0f;
+    private float defeatTime = 0f;
+    private int defeatFrame = 0;
     private int lenAgrAnim = 4;
     private int sizeX = 96;
     private int sizeY = 128;
@@ -48,7 +50,7 @@ public class Terminator extends CustomActor {
     }
 
     public boolean getAgrMod() {
-        return agrMod&&(this.agrAnim<lenAgrAnim);
+        return agrMod && (this.agrAnim < lenAgrAnim);
     }
 
     public void setAlive(boolean alive) {
@@ -85,7 +87,12 @@ public class Terminator extends CustomActor {
         agrTime += time;
         if (agrTime > 0.05f) {
             agrTime = 0f;
-            if (frameAgr < 10) {frameAgr++;} else {frameAgr = 0; agrAnim++;}
+            if (frameAgr < 10) {
+                frameAgr++;
+            } else {
+                frameAgr = 0;
+                agrAnim++;
+            }
             this.terminatorRegion = new TextureRegion(terminatorTexture, 696 + frameAgr * 24, 0, 24, 32);
             this.setSize(sizeX, sizeY);
         }
@@ -112,32 +119,49 @@ public class Terminator extends CustomActor {
     }
 
     public void update(float time) {
-        boolean can = !agrMod;
-        if (!agrMod) {
-            if (this.getY() - person.getY() < 500) {
-                agrMod = true;
-                THROWDELAYTIME /= 2;
+        if (isAlive()) {
+            boolean can = !agrMod;
+            if (!agrMod) {
+                if (this.getY() - person.getY() < 500) {
+                    agrMod = true;
+                    THROWDELAYTIME /= 2;
+                }
+            } else {
+                if (agrAnim < lenAgrAnim) {
+                    updateAgrTexture(time);
+                } else {
+                    can = true;
+                }
+            }
+            if (can) {
+                if (throwDelay && curTime > throwDelayTime) {
+                    isThrow = true;
+                    throwDelay = false;
+                    curTime = 0f;
+                }
+                if (isThrow) {
+                    updateThrowTexture(time);
+                }
+                if (throwDelay) {
+                    updateIdleTexture(time);
+                    curTime += time;
+                }
             }
         } else {
-            if (agrAnim < lenAgrAnim) {
-                updateAgrTexture(time);
-            } else {
-                can = true;
-            }
+            updateDefeatTexture(time);
         }
-        if (can) {
-            if (throwDelay && curTime > throwDelayTime) {
-                isThrow = true;
-                throwDelay = false;
-                curTime = 0f;
+    }
+
+    public void updateDefeatTexture(float time) {
+        defeatTime += time;
+        if (defeatTime > 0.7f) {
+            defeatTime = 0f;
+            if (defeatFrame < 4) {
+                defeatFrame++;
+            } else {
+                this.remove();
             }
-            if (isThrow) {
-                updateThrowTexture(time);
-            }
-            if (throwDelay) {
-                updateIdleTexture(time);
-                curTime += time;
-            }
+            this.terminatorRegion = new TextureRegion(terminatorTexture, 960 + defeatFrame * 24, 0, 24, 32);
         }
     }
 

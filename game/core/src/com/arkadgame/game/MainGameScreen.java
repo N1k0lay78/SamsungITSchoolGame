@@ -88,6 +88,7 @@ public class MainGameScreen extends BaseScreen {
     private boolean clear = true;
     private boolean agrMusic = false;
     private boolean BeautifulCamera = false;
+    private boolean showWin = false;
 
 
     public void createBeautifulCamera() {
@@ -108,7 +109,7 @@ public class MainGameScreen extends BaseScreen {
         createButtons();
         createUI();
         createBeautifulCamera();
-        BeautifulCamera = true;
+        BeautifulCamera = false;
         this.recreate();
     }
 
@@ -168,6 +169,7 @@ public class MainGameScreen extends BaseScreen {
                     barrels.setPosition(step, (layer + 1) * step);
                     stage.addActor(barrels);
                     terminator.setPosition(3 * step, (layer + 1) * step);
+                    pinchos.add(terminator);
                 }
                 System.out.println(stairs + " " + i);
             } else {
@@ -277,14 +279,20 @@ public class MainGameScreen extends BaseScreen {
             offsetX = 0;
         if (!person.isAlive()) {
             showResetButton();
+            hideShowWin();
             showShowGameOver();
             offsetY = 0;
         }
         } else {
             hideResetButton();
             hideShowGameOver();
+            if (person.getIsWin()) {
+                showShowWin();
+            } else {
+                hideShowWin();
+            }
         }
-        // person.setAlive(true);
+        person.setAlive(true);
         this.checkButtons(delta);
         if (terminator.getAgrMod()) {
             newX = terminator.getX() * scale + offsetX;
@@ -357,9 +365,14 @@ public class MainGameScreen extends BaseScreen {
     private void createUI() {
         texts = new ArrayList<>(10);
         showGameOverBool = true;
+        showWin = true;
         Text text = new Text(buttonTexture, 240, 64, 96, 64, zoom * 0.6f);
         text.setPosition((width - text.getWidth()) / 2, (height * 1.2f - text.getHeight()) / 2);
         text.setType("GameOver");
+        texts.add(text);
+        text = new Text(buttonTexture, 448, 64, 80, 64, zoom * 0.6f);
+        text.setPosition((width - text.getWidth()) / 2, (height * 1.2f - text.getHeight()) / 2);
+        text.setType("Win");
         texts.add(text);
     }
 
@@ -380,6 +393,28 @@ public class MainGameScreen extends BaseScreen {
             for (Button but : buttons) {
                 if (but.getType().equalsIgnoreCase("ResetButton")) {
                     but.setPosition(-1000, height - offsetY - but.getHeight());
+                }
+            }
+        }
+    }
+
+    private void showShowWin() {
+        if (!showWin) {
+            showWin = true;
+            for (Text text : texts) {
+                if (text.getType().equalsIgnoreCase("Win")) {
+                    text.setPosition((width - text.getWidth()) / 2, (height * 1.2f - text.getHeight()) / 2);
+                }
+            }
+        }
+    }
+
+    private void hideShowWin() {
+        if (showWin) {
+            showWin = false;
+            for (Text text : texts) {
+                if (text.getType().equalsIgnoreCase("Win")) {
+                    text.setPosition(-1000, height - offsetY - text.getHeight());
                 }
             }
         }
